@@ -10,6 +10,7 @@ import io.vertx.core.logging.LoggerFactory;
 
 import io.swagger.server.api.model.Certificate;
 import io.swagger.server.api.model.ConnectResponse;
+import io.swagger.server.api.model.EventBody;
 import io.swagger.server.api.MainApiException;
 import io.swagger.server.api.model.RoundtripMethodCallBody;
 
@@ -490,12 +491,12 @@ public class DeviceApiVerticle extends AbstractVerticle {
                     return;
                 }
                 String connectionId = connectionIdParam;
-                String eventBodyParam = message.body().getString("eventBody");
-                if(eventBodyParam == null) {
+                JsonObject eventBodyParam = message.body().getJsonObject("eventBody");
+                if (eventBodyParam == null) {
                     manageError(message, new MainApiException(400, "eventBody is required"), serviceId);
                     return;
                 }
-                Object eventBody = Json.mapper.readValue(eventBodyParam, Object.class);
+                EventBody eventBody = Json.mapper.readValue(eventBodyParam.encode(), EventBody.class);
                 service.deviceSendEvent(connectionId, eventBody, result -> {
                     if (result.succeeded())
                         message.reply(null);

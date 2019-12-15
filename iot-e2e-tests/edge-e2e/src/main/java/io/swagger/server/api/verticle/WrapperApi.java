@@ -1,5 +1,6 @@
 package io.swagger.server.api.verticle;
 
+import io.swagger.server.api.model.LogMessage;
 import io.swagger.server.api.MainApiException;
 
 import io.vertx.core.AsyncResult;
@@ -16,7 +17,7 @@ public interface WrapperApi  {
     void wrapperGetCapabilities(Handler<AsyncResult<Object>> handler);
 
     //Wrapper_LogMessage
-    void wrapperLogMessage(Object msg, Handler<AsyncResult<Void>> handler);
+    void wrapperLogMessage(LogMessage logMessage, Handler<AsyncResult<Void>> handler);
 
     //Wrapper_SendCommand
     void wrapperSendCommand(String cmd, Handler<AsyncResult<Void>> handler);

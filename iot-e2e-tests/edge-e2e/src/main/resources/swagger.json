@@ -67,10 +67,10 @@
         "consumes" : [ "application/json" ],
         "parameters" : [ {
           "in" : "body",
-          "name" : "msg",
+          "name" : "logMessage",
           "required" : true,
           "schema" : {
-            "type" : "object"
+            "$ref" : "#/definitions/logMessage"
           }
         } ],
         "responses" : {
@@ -718,7 +718,7 @@
           "name" : "eventBody",
           "required" : true,
           "schema" : {
-            "type" : "object"
+            "$ref" : "#/definitions/eventBody"
           }
         } ],
         "responses" : {
@@ -752,7 +752,7 @@
           "name" : "eventBody",
           "required" : true,
           "schema" : {
-            "type" : "object"
+            "$ref" : "#/definitions/eventBody"
           }
         } ],
         "responses" : {
@@ -858,7 +858,7 @@
           "name" : "methodInvokeParameters",
           "required" : true,
           "schema" : {
-            "type" : "object"
+            "$ref" : "#/definitions/methodInvoke"
           }
         } ],
         "responses" : {
@@ -896,7 +896,7 @@
           "name" : "methodInvokeParameters",
           "required" : true,
           "schema" : {
-            "type" : "object"
+            "$ref" : "#/definitions/methodInvoke"
           }
         } ],
         "responses" : {
@@ -1107,7 +1107,7 @@
           "name" : "eventBody",
           "required" : true,
           "schema" : {
-            "type" : "object"
+            "$ref" : "#/definitions/eventBody"
           }
         } ],
         "responses" : {
@@ -1430,7 +1430,7 @@
           "name" : "eventBody",
           "required" : true,
           "schema" : {
-            "type" : "object"
+            "$ref" : "#/definitions/eventBody"
           }
         } ],
         "responses" : {
@@ -1714,6 +1714,16 @@
     }
   },
   "definitions" : {
+    "logMessage" : {
+      "type" : "object",
+      "properties" : {
+        "message" : {
+          "type" : "string",
+          "description" : "text of message"
+        }
+      },
+      "description" : "message from the test script to output to the log"
+    },
     "connectResponse" : {
       "type" : "object",
       "properties" : {
@@ -1734,6 +1744,10 @@
       },
       "description" : "certificate in the body of a message"
     },
+    "eventBody" : {
+      "type" : "object",
+      "description" : "body for an invoming or outgoing event or message"
+    },
     "roundtripMethodCallBody" : {
       "type" : "object",
       "properties" : {
@@ -1753,6 +1767,29 @@
         }
       },
       "description" : "parameters and response for a sync method call"
+    },
+    "methodInvoke" : {
+      "type" : "object",
+      "properties" : {
+        "methodName" : {
+          "type" : "string",
+          "description" : "name of method to invoke"
+        },
+        "payload" : {
+          "type" : "object",
+          "description" : "payload to send to the method",
+          "properties" : { }
+        },
+        "responseTimeoutInSeconds" : {
+          "type" : "integer",
+          "description" : "number of seconds to wait for a response"
+        },
+        "connectTimeoutInSeconds" : {
+          "type" : "integer",
+          "description" : "number of seconds to wait for the module to connect"
+        }
+      },
+      "description" : "parameters used to invoke a method"
     }
   }
 }

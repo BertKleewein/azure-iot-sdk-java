@@ -1,6 +1,7 @@
 package io.swagger.server.api.verticle;
 
 import io.swagger.server.api.model.ConnectResponse;
+import io.swagger.server.api.model.EventBody;
 import io.swagger.server.api.MainApiException;
 
 import io.vertx.core.AsyncResult;
@@ -23,6 +24,6 @@ public interface ServiceApi  {
     void serviceInvokeModuleMethod(String connectionId, String deviceId, String moduleId, Object methodInvokeParameters, Handler<AsyncResult<Object>> handler);
 
     //Service_SendC2d
-    void serviceSendC2d(String connectionId, String deviceId, Object eventBody, Handler<AsyncResult<Void>> handler);
+    void serviceSendC2d(String connectionId, String deviceId, EventBody eventBody, Handler<AsyncResult<Void>> handler);
 
 }

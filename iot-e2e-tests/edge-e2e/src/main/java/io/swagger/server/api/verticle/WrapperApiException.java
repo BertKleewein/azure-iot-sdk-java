@@ -1,5 +1,6 @@
 package io.swagger.server.api.verticle;
 
+import io.swagger.server.api.model.LogMessage;
 import io.swagger.server.api.MainApiException;
 
 public final class WrapperApiException extends MainApiException {

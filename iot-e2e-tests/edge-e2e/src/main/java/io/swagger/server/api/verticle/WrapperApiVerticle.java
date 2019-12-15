@@ -8,6 +8,7 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 
+import io.swagger.server.api.model.LogMessage;
 import io.swagger.server.api.MainApiException;
 
 import java.util.List;
@@ -80,13 +81,13 @@ public class WrapperApiVerticle extends AbstractVerticle {
             try {
                 // Workaround for #allParams section clearing the vendorExtensions map
                 String serviceId = "Wrapper_LogMessage";
-                // Changed msg handling from string->object in merge
-                Object msg = message.body().getJsonObject("msg");
-                if(msg == null) {
-                    manageError(message, new MainApiException(400, "msg is required"), serviceId);
+                JsonObject logMessageParam = message.body().getJsonObject("logMessage");
+                if (logMessageParam == null) {
+                    manageError(message, new MainApiException(400, "logMessage is required"), serviceId);
                     return;
                 }
-                service.wrapperLogMessage(msg, result -> {
+                LogMessage logMessage = Json.mapper.readValue(logMessageParam.encode(), LogMessage.class);
+                service.wrapperLogMessage(logMessage, result -> {
                     if (result.succeeded())
                         message.reply(null);
                     else {

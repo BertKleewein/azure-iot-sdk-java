@@ -2,7 +2,9 @@ package io.swagger.server.api.verticle;
 
 import io.swagger.server.api.model.Certificate;
 import io.swagger.server.api.model.ConnectResponse;
+import io.swagger.server.api.model.EventBody;
 import io.swagger.server.api.MainApiException;
+import io.swagger.server.api.model.MethodInvoke;
 import io.swagger.server.api.model.RoundtripMethodCallBody;
 
 import io.vertx.core.AsyncResult;
@@ -55,10 +57,10 @@ public interface ModuleApi  {
     void moduleGetTwin(String connectionId, Handler<AsyncResult<Object>> handler);
 
     //Module_InvokeDeviceMethod
-    void moduleInvokeDeviceMethod(String connectionId, String deviceId, Object methodInvokeParameters, Handler<AsyncResult<Object>> handler);
+    void moduleInvokeDeviceMethod(String connectionId, String deviceId, MethodInvoke methodInvokeParameters, Handler<AsyncResult<Object>> handler);
 
     //Module_InvokeModuleMethod
-    void moduleInvokeModuleMethod(String connectionId, String deviceId, String moduleId, Object methodInvokeParameters, Handler<AsyncResult<Object>> handler);
+    void moduleInvokeModuleMethod(String connectionId, String deviceId, String moduleId, MethodInvoke methodInvokeParameters, Handler<AsyncResult<Object>> handler);
 
     //Module_PatchTwin
     void modulePatchTwin(String connectionId, Object props, Handler<AsyncResult<Void>> handler);
@@ -70,10 +72,10 @@ public interface ModuleApi  {
     void moduleRoundtripMethodCall(String connectionId, String methodName, RoundtripMethodCallBody requestAndResponse, Handler<AsyncResult<Void>> handler);
 
     //Module_SendEvent
-    void moduleSendEvent(String connectionId, Object eventBody, Handler<AsyncResult<Void>> handler);
+    void moduleSendEvent(String connectionId, EventBody eventBody, Handler<AsyncResult<Void>> handler);
 
     //Module_SendOutputEvent
-    void moduleSendOutputEvent(String connectionId, String outputName, Object eventBody, Handler<AsyncResult<Void>> handler);
+    void moduleSendOutputEvent(String connectionId, String outputName, EventBody eventBody, Handler<AsyncResult<Void>> handler);
 
     //Module_WaitForConnectionStatusChange
     void moduleWaitForConnectionStatusChange(String connectionId, Handler<AsyncResult<String>> handler);

@@ -2,6 +2,7 @@ package io.swagger.server.api.verticle;
 
 import io.swagger.server.api.model.Certificate;
 import io.swagger.server.api.model.ConnectResponse;
+import io.swagger.server.api.model.EventBody;
 import io.swagger.server.api.MainApiException;
 import io.swagger.server.api.model.RoundtripMethodCallBody;
 
@@ -58,7 +59,7 @@ public interface DeviceApi  {
     void deviceRoundtripMethodCall(String connectionId, String methodName, RoundtripMethodCallBody requestAndResponse, Handler<AsyncResult<Void>> handler);
 
     //Device_SendEvent
-    void deviceSendEvent(String connectionId, Object eventBody, Handler<AsyncResult<Void>> handler);
+    void deviceSendEvent(String connectionId, EventBody eventBody, Handler<AsyncResult<Void>> handler);
 
     //Device_WaitForC2dMessage
     void deviceWaitForC2dMessage(String connectionId, Handler<AsyncResult<Object>> handler);

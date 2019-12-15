@@ -9,6 +9,7 @@ import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 
 import io.swagger.server.api.model.ConnectResponse;
+import io.swagger.server.api.model.EventBody;
 import io.swagger.server.api.MainApiException;
 
 import java.util.List;
@@ -185,12 +186,12 @@ public class ServiceApiVerticle extends AbstractVerticle {
                     return;
                 }
                 String deviceId = deviceIdParam;
-                String eventBodyParam = message.body().getString("eventBody");
-                if(eventBodyParam == null) {
+                JsonObject eventBodyParam = message.body().getJsonObject("eventBody");
+                if (eventBodyParam == null) {
                     manageError(message, new MainApiException(400, "eventBody is required"), serviceId);
                     return;
                 }
-                Object eventBody = Json.mapper.readValue(eventBodyParam, Object.class);
+                EventBody eventBody = Json.mapper.readValue(eventBodyParam.encode(), EventBody.class);
                 service.serviceSendC2d(connectionId, deviceId, eventBody, result -> {
                     if (result.succeeded())
                         message.reply(null);

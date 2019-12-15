@@ -10,7 +10,9 @@ import io.vertx.core.logging.LoggerFactory;
 
 import io.swagger.server.api.model.Certificate;
 import io.swagger.server.api.model.ConnectResponse;
+import io.swagger.server.api.model.EventBody;
 import io.swagger.server.api.MainApiException;
+import io.swagger.server.api.model.MethodInvoke;
 import io.swagger.server.api.model.RoundtripMethodCallBody;
 
 import java.util.List;
@@ -456,12 +458,12 @@ public class ModuleApiVerticle extends AbstractVerticle {
                     return;
                 }
                 String deviceId = deviceIdParam;
-                String methodInvokeParametersParam = message.body().getString("methodInvokeParameters");
-                if(methodInvokeParametersParam == null) {
+                JsonObject methodInvokeParametersParam = message.body().getJsonObject("methodInvokeParameters");
+                if (methodInvokeParametersParam == null) {
                     manageError(message, new MainApiException(400, "methodInvokeParameters is required"), serviceId);
                     return;
                 }
-                Object methodInvokeParameters = Json.mapper.readValue(methodInvokeParametersParam, Object.class);
+                MethodInvoke methodInvokeParameters = Json.mapper.readValue(methodInvokeParametersParam.encode(), MethodInvoke.class);
                 service.moduleInvokeDeviceMethod(connectionId, deviceId, methodInvokeParameters, result -> {
                     if (result.succeeded())
                         message.reply(new JsonObject(Json.encode(result.result())).encodePrettily());
@@ -499,12 +501,12 @@ public class ModuleApiVerticle extends AbstractVerticle {
                     return;
                 }
                 String moduleId = moduleIdParam;
-                String methodInvokeParametersParam = message.body().getString("methodInvokeParameters");
-                if(methodInvokeParametersParam == null) {
+                JsonObject methodInvokeParametersParam = message.body().getJsonObject("methodInvokeParameters");
+                if (methodInvokeParametersParam == null) {
                     manageError(message, new MainApiException(400, "methodInvokeParameters is required"), serviceId);
                     return;
                 }
-                Object methodInvokeParameters = Json.mapper.readValue(methodInvokeParametersParam, Object.class);
+                MethodInvoke methodInvokeParameters = Json.mapper.readValue(methodInvokeParametersParam.encode(), MethodInvoke.class);
                 service.moduleInvokeModuleMethod(connectionId, deviceId, moduleId, methodInvokeParameters, result -> {
                     if (result.succeeded())
                         message.reply(new JsonObject(Json.encode(result.result())).encodePrettily());
@@ -625,12 +627,12 @@ public class ModuleApiVerticle extends AbstractVerticle {
                     return;
                 }
                 String connectionId = connectionIdParam;
-                String eventBodyParam = message.body().getString("eventBody");
-                if(eventBodyParam == null) {
+                JsonObject eventBodyParam = message.body().getJsonObject("eventBody");
+                if (eventBodyParam == null) {
                     manageError(message, new MainApiException(400, "eventBody is required"), serviceId);
                     return;
                 }
-                Object eventBody = Json.mapper.readValue(eventBodyParam, Object.class);
+                EventBody eventBody = Json.mapper.readValue(eventBodyParam.encode(), EventBody.class);
                 service.moduleSendEvent(connectionId, eventBody, result -> {
                     if (result.succeeded())
                         message.reply(null);
@@ -662,12 +664,12 @@ public class ModuleApiVerticle extends AbstractVerticle {
                     return;
                 }
                 String outputName = outputNameParam;
-                // Changed msg handling from string->object in merge
-                Object eventBody = message.body().getJsonObject("eventBody");
-                if(eventBody == null) {
+                JsonObject eventBodyParam = message.body().getJsonObject("eventBody");
+                if (eventBodyParam == null) {
                     manageError(message, new MainApiException(400, "eventBody is required"), serviceId);
                     return;
                 }
+                EventBody eventBody = Json.mapper.readValue(eventBodyParam.encode(), EventBody.class);
                 service.moduleSendOutputEvent(connectionId, outputName, eventBody, result -> {
                     if (result.succeeded())
                         message.reply(null);
