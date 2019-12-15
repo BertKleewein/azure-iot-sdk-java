@@ -5,6 +5,7 @@ import glue.WrapperGlue;
 
 import io.swagger.server.api.MainApiException;
 
+import io.swagger.server.api.model.LogMessage;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 
@@ -35,9 +36,9 @@ public class WrapperApiImpl implements WrapperApi
 
     //Wrapper_LogMessage
     @Override
-    public void wrapperLogMessage(Object msg, Handler<AsyncResult<Void>> handler)
+    public void wrapperLogMessage(LogMessage logMessage, Handler<AsyncResult<Void>> handler)
     {
-        this._wrapperGlue.outputMessage(msg, handler);
+        this._wrapperGlue.outputMessage(logMessage, handler);
     }
 
     //Wrapper_SendCommand

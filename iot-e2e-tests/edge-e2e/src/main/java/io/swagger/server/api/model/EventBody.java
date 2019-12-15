@@ -1,6 +1,7 @@
 package io.swagger.server.api.model;
 
 import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
  * body for an invoming or outgoing event or message
@@ -11,9 +12,6 @@ public class EventBody   {
 
   public EventBody () {
 
-  }
-
-  public EventBody () {
   }
 
 

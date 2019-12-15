@@ -6,6 +6,8 @@ import glue.ServiceGlue;
 import io.swagger.server.api.model.ConnectResponse;
 import io.swagger.server.api.MainApiException;
 
+import io.swagger.server.api.model.EventBody;
+import io.swagger.server.api.model.MethodInvoke;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 
@@ -36,21 +38,21 @@ public class ServiceApiImpl implements ServiceApi
 
     //Service_InvokeDeviceMethod
     @Override
-    public void serviceInvokeDeviceMethod(String connectionId, String deviceId, Object methodInvokeParameters, Handler<AsyncResult<Object>> handler)
+    public void serviceInvokeDeviceMethod(String connectionId, String deviceId, MethodInvoke methodInvokeParameters, Handler<AsyncResult<Object>> handler)
     {
         this._serviceGlue.invokeDeviceMethod(connectionId, deviceId, methodInvokeParameters, handler);
     }
 
     //Service_InvokeModuleMethod
     @Override
-    public void serviceInvokeModuleMethod(String connectionId, String deviceId, String moduleId, Object methodInvokeParameters, Handler<AsyncResult<Object>> handler)
+    public void serviceInvokeModuleMethod(String connectionId, String deviceId, String moduleId, MethodInvoke methodInvokeParameters, Handler<AsyncResult<Object>> handler)
     {
         this._serviceGlue.invokeModuleMethod(connectionId, deviceId, moduleId, methodInvokeParameters, handler);
     }
 
     //Service_SendC2d
     @Override
-    public void serviceSendC2d(String connectionId, String deviceId, Object eventBody, Handler<AsyncResult<Void>> handler)
+    public void serviceSendC2d(String connectionId, String deviceId, EventBody eventBody, Handler<AsyncResult<Void>> handler)
     {
         throw new java.lang.UnsupportedOperationException("Not supported yet");
     }

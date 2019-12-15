@@ -1,5 +1,6 @@
 package glue;
 
+import io.swagger.server.api.model.LogMessage;
 import io.swagger.server.api.verticle.ModuleApiImpl;
 import io.swagger.server.api.verticle.RegistryApiImpl;
 import io.swagger.server.api.verticle.ServiceApiImpl;
@@ -18,9 +19,9 @@ public class WrapperGlue
         handler.handle(Future.succeededFuture());
     }
 
-    public void outputMessage(Object message, Handler<AsyncResult<Void>> handler)
+    public void outputMessage(LogMessage logMessage, Handler<AsyncResult<Void>> handler)
     {
-        System.out.println(((JsonObject)message).getString("message"));
+        System.out.println(logMessage.getMessage());
         handler.handle(Future.succeededFuture());
     }
 }
