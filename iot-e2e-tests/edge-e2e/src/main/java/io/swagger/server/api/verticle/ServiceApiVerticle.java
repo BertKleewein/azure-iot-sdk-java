@@ -11,6 +11,7 @@ import io.vertx.core.logging.LoggerFactory;
 import io.swagger.server.api.model.ConnectResponse;
 import io.swagger.server.api.model.EventBody;
 import io.swagger.server.api.MainApiException;
+import io.swagger.server.api.model.MethodInvoke;
 
 import java.util.List;
 import java.util.Map;
@@ -106,12 +107,12 @@ public class ServiceApiVerticle extends AbstractVerticle {
                     return;
                 }
                 String deviceId = deviceIdParam;
-                String methodInvokeParametersParam = message.body().getString("methodInvokeParameters");
-                if(methodInvokeParametersParam == null) {
+                JsonObject methodInvokeParametersParam = message.body().getJsonObject("methodInvokeParameters");
+                if (methodInvokeParametersParam == null) {
                     manageError(message, new MainApiException(400, "methodInvokeParameters is required"), serviceId);
                     return;
                 }
-                Object methodInvokeParameters = Json.mapper.readValue(methodInvokeParametersParam, Object.class);
+                MethodInvoke methodInvokeParameters = Json.mapper.readValue(methodInvokeParametersParam.encode(), MethodInvoke.class);
                 service.serviceInvokeDeviceMethod(connectionId, deviceId, methodInvokeParameters, result -> {
                     if (result.succeeded())
                         message.reply(new JsonObject(Json.encode(result.result())).encodePrettily());
@@ -149,12 +150,12 @@ public class ServiceApiVerticle extends AbstractVerticle {
                     return;
                 }
                 String moduleId = moduleIdParam;
-                String methodInvokeParametersParam = message.body().getString("methodInvokeParameters");
-                if(methodInvokeParametersParam == null) {
+                JsonObject methodInvokeParametersParam = message.body().getJsonObject("methodInvokeParameters");
+                if (methodInvokeParametersParam == null) {
                     manageError(message, new MainApiException(400, "methodInvokeParameters is required"), serviceId);
                     return;
                 }
-                Object methodInvokeParameters = Json.mapper.readValue(methodInvokeParametersParam, Object.class);
+                MethodInvoke methodInvokeParameters = Json.mapper.readValue(methodInvokeParametersParam.encode(), MethodInvoke.class);
                 service.serviceInvokeModuleMethod(connectionId, deviceId, moduleId, methodInvokeParameters, result -> {
                     if (result.succeeded())
                         message.reply(new JsonObject(Json.encode(result.result())).encodePrettily());
