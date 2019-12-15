@@ -15,6 +15,7 @@ import com.microsoft.azure.sdk.iot.device.transport.RetryPolicy;
 import io.swagger.server.api.model.Certificate;
 import io.swagger.server.api.model.ConnectResponse;
 import io.swagger.server.api.MainApiException;
+import io.swagger.server.api.model.EventBody;
 import io.swagger.server.api.model.RoundtripMethodCallBody;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
@@ -406,11 +407,11 @@ public class ModuleGlue
         }
     }
 
-    public void sendEvent(String connectionId, String eventBody, Handler<AsyncResult<Void>> handler)
+    public void sendEvent(String connectionId, EventBody eventBody, Handler<AsyncResult<Void>> handler)
     {
         System.out.printf("moduleConnectionIdEventPut called for %s%n", connectionId);
         System.out.println(eventBody);
-        this.sendEventHelper(connectionId, new Message(eventBody), handler);
+        this.sendEventHelper(connectionId, new Message(eventBody.toString()), handler);
     }
 
     protected static class MessageCallback implements com.microsoft.azure.sdk.iot.device.MessageCallback

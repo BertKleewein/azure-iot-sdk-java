@@ -4,10 +4,8 @@ package io.swagger.server.api.verticle;
 // Added 1 lines in merge
 import glue.ModuleGlue;
 
-import io.swagger.server.api.model.Certificate;
-import io.swagger.server.api.model.ConnectResponse;
+import io.swagger.server.api.model.*;
 import io.swagger.server.api.MainApiException;
-import io.swagger.server.api.model.RoundtripMethodCallBody;
 
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
@@ -123,14 +121,14 @@ public class ModuleApiImpl implements ModuleApi
 
     //Module_InvokeDeviceMethod
     @Override
-    public void moduleInvokeDeviceMethod(String connectionId, String deviceId, Object methodInvokeParameters, Handler<AsyncResult<Object>> handler)
+    public void moduleInvokeDeviceMethod(String connectionId, String deviceId, MethodInvoke methodInvokeParameters, Handler<AsyncResult<Object>> handler)
     {
         this._moduleGlue.invokeDeviceMethod(connectionId, deviceId, methodInvokeParameters, handler);
     }
 
     //Module_InvokeModuleMethod
     @Override
-    public void moduleInvokeModuleMethod(String connectionId, String deviceId, String moduleId, Object methodInvokeParameters, Handler<AsyncResult<Object>> handler)
+    public void moduleInvokeModuleMethod(String connectionId, String deviceId, String moduleId, MethodInvoke methodInvokeParameters, Handler<AsyncResult<Object>> handler)
     {
         this._moduleGlue.invokeModuleMethod(connectionId, deviceId, moduleId, methodInvokeParameters, handler);
     }
@@ -158,14 +156,14 @@ public class ModuleApiImpl implements ModuleApi
 
     //Module_SendEvent
     @Override
-    public void moduleSendEvent(String connectionId, Object eventBody, Handler<AsyncResult<Void>> handler)
+    public void moduleSendEvent(String connectionId, EventBody eventBody, Handler<AsyncResult<Void>> handler)
     {
-        this._moduleGlue.sendEvent(connectionId, (String)eventBody, handler);
+        this._moduleGlue.sendEvent(connectionId, eventBody, handler);
     }
 
     //Module_SendOutputEvent
     @Override
-    public void moduleSendOutputEvent(String connectionId, String outputName, Object eventBody, Handler<AsyncResult<Void>> handler)
+    public void moduleSendOutputEvent(String connectionId, String outputName, EventBody eventBody, Handler<AsyncResult<Void>> handler)
     {
         this._moduleGlue.sendOutputEvent(connectionId, outputName, eventBody, handler);
     }

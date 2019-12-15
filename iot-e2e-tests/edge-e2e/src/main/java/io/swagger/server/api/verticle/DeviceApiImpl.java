@@ -3,6 +3,7 @@ package io.swagger.server.api.verticle;
 import io.swagger.server.api.model.Certificate;
 import io.swagger.server.api.model.ConnectResponse;
 import io.swagger.server.api.MainApiException;
+import io.swagger.server.api.model.EventBody;
 import io.swagger.server.api.model.RoundtripMethodCallBody;
 
 import io.vertx.core.AsyncResult;
@@ -123,7 +124,7 @@ public class DeviceApiImpl implements DeviceApi
 
     //Device_SendEvent
     @Override
-    public void deviceSendEvent(String connectionId, Object eventBody, Handler<AsyncResult<Void>> handler)
+    public void deviceSendEvent(String connectionId, EventBody eventBody, Handler<AsyncResult<Void>> handler)
     {
         throw new java.lang.UnsupportedOperationException("Not supported yet");
     }
