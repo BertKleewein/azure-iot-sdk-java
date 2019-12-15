@@ -1,37 +1,57 @@
 package io.swagger.server.api.verticle;
 
+// Added 1 line in merge
 import glue.WrapperGlue;
-import io.vertx.core.json.JsonObject;
+
+import io.swagger.server.api.MainApiException;
+
 import io.vertx.core.AsyncResult;
-import io.vertx.core.Future;
 import io.vertx.core.Handler;
 
-import java.io.Console;
+import java.util.List;
+import java.util.Map;
 
-public class WrapperApiImpl implements WrapperApi  {
+// Added all Override annotations and method bodies in merge
+
+// Changed from interface to class in merge
+public class WrapperApiImpl implements WrapperApi
+{
+    // Added 1 line in merge
     private WrapperGlue _wrapperGlue= new WrapperGlue();
 
+    //Wrapper_Cleanup
     @Override
-    public void wrapperCleanupPut(Handler<AsyncResult<Void>> handler)
+    public void wrapperCleanup(Handler<AsyncResult<Void>> handler)
     {
         this._wrapperGlue.Cleanup(handler);
     }
 
+    //Wrapper_GetCapabilities
     @Override
-    public void wrapperMessagePut(Object message, Handler<AsyncResult<Void>> handler)
+    public void wrapperGetCapabilities(Handler<AsyncResult<Object>> handler)
     {
-        this._wrapperGlue.outputMessage(message, handler);
+        throw new java.lang.UnsupportedOperationException("Not supported yet");
     }
 
+    //Wrapper_LogMessage
     @Override
-    public void wrapperSessionGet(Handler<AsyncResult<Void>> handler)
+    public void wrapperLogMessage(Object msg, Handler<AsyncResult<Void>> handler)
     {
-        handler.handle(Future.succeededFuture());
+        this._wrapperGlue.outputMessage(msg, handler);
     }
 
+    //Wrapper_SendCommand
     @Override
-    public void wrapperSessionPut(Handler<AsyncResult<Void>> handler)
+    public void wrapperSendCommand(String cmd, Handler<AsyncResult<Void>> handler)
     {
-        handler.handle(Future.succeededFuture());
+        throw new java.lang.UnsupportedOperationException("Not supported yet");
     }
+
+    //Wrapper_SetFlags
+    @Override
+    public void wrapperSetFlags(Object flags, Handler<AsyncResult<Void>> handler)
+    {
+        throw new java.lang.UnsupportedOperationException("Not supported yet");
+    }
+
 }

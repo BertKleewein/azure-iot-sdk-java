@@ -10,16 +10,19 @@ import java.util.List;
 import java.util.Map;
 
 public interface ServiceApi  {
-    //PUT_service_connect
-    void serviceConnectPut(String connectionString, Handler<AsyncResult<ConnectResponse>> handler);
-    
-    //PUT_service_connectionId_deviceMethod_deviceId
-    void serviceConnectionIdDeviceMethodDeviceIdPut(String connectionId, String deviceId, Object methodInvokeParameters, Handler<AsyncResult<Object>> handler);
-    
-    //PUT_service_connectionId_disconnect_
-    void serviceConnectionIdDisconnectPut(String connectionId, Handler<AsyncResult<Void>> handler);
-    
-    //PUT_service_connectionId_moduleMethod_deviceId_moduleId
-    void serviceConnectionIdModuleMethodDeviceIdModuleIdPut(String connectionId, String deviceId, String moduleId, Object methodInvokeParameters, Handler<AsyncResult<Object>> handler);
-    
+    //Service_Connect
+    void serviceConnect(String connectionString, Handler<AsyncResult<ConnectResponse>> handler);
+
+    //Service_Disconnect
+    void serviceDisconnect(String connectionId, Handler<AsyncResult<Void>> handler);
+
+    //Service_InvokeDeviceMethod
+    void serviceInvokeDeviceMethod(String connectionId, String deviceId, Object methodInvokeParameters, Handler<AsyncResult<Object>> handler);
+
+    //Service_InvokeModuleMethod
+    void serviceInvokeModuleMethod(String connectionId, String deviceId, String moduleId, Object methodInvokeParameters, Handler<AsyncResult<Object>> handler);
+
+    //Service_SendC2d
+    void serviceSendC2d(String connectionId, String deviceId, Object eventBody, Handler<AsyncResult<Void>> handler);
+
 }

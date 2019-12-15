@@ -9,16 +9,19 @@ import java.util.List;
 import java.util.Map;
 
 public interface WrapperApi  {
-    //PUT_wrapper_cleanup
-    void wrapperCleanupPut(Handler<AsyncResult<Void>> handler);
-    
-    //PUT_wrapper_message
-    void wrapperMessagePut(Object msg, Handler<AsyncResult<Void>> handler);
-    
-    //GET_wrapper_session
-    void wrapperSessionGet(Handler<AsyncResult<Void>> handler);
-    
-    //PUT_wrapper_session
-    void wrapperSessionPut(Handler<AsyncResult<Void>> handler);
-    
+    //Wrapper_Cleanup
+    void wrapperCleanup(Handler<AsyncResult<Void>> handler);
+
+    //Wrapper_GetCapabilities
+    void wrapperGetCapabilities(Handler<AsyncResult<Object>> handler);
+
+    //Wrapper_LogMessage
+    void wrapperLogMessage(Object msg, Handler<AsyncResult<Void>> handler);
+
+    //Wrapper_SendCommand
+    void wrapperSendCommand(String cmd, Handler<AsyncResult<Void>> handler);
+
+    //Wrapper_SetFlags
+    void wrapperSetFlags(Object flags, Handler<AsyncResult<Void>> handler);
+
 }

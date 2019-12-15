@@ -2,43 +2,152 @@ package io.swagger.server.api.verticle;
 
 import io.swagger.server.api.model.Certificate;
 import io.swagger.server.api.model.ConnectResponse;
+import io.swagger.server.api.MainApiException;
 import io.swagger.server.api.model.RoundtripMethodCallBody;
+
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 
+import java.util.List;
+import java.util.Map;
+
+// Added all Override annotations and method bodies in merge
+
+// Changed from interface to class in merge
 public class DeviceApiImpl implements DeviceApi
 {
-    // These implementations are empty on purpose for future expansion.
-    //
-    // The short story is that there is a minor piece of functionality that is not yet being tested.  Specifically, we are not yet
-    // testing that a Java leaf device that is sitting behind IoTEdge (using GateWayHostName=) can handle a method call
-    // (from the service or from a module).  We still test if the Java SDK can invoke a method on a leaf device (using the Node SDK for the leaf device),
-    // but we don't test if it works with a Java leaf device.
-    //
-    // This oversight was discovered late, and, because of time, we had to skip this test for most SDKs.  Once this implementation is filled in, we can switch the test
-    // runner so this gets tested.
-    //
+    //Device_Connect
     @Override
-    public void deviceConnectTransportTypePut(String transportType, String connectionString, Certificate caCertificate, Handler<AsyncResult<ConnectResponse>> handler)
+    public void deviceConnect(String transportType, String connectionString, Certificate caCertificate, Handler<AsyncResult<ConnectResponse>> handler)
     {
-
+        throw new java.lang.UnsupportedOperationException("Not supported yet");
     }
 
+    //Device_Connect2
     @Override
-    public void deviceConnectionIdDisconnectPut(String connectionId, Handler<AsyncResult<Void>> handler)
+    public void deviceConnect2(String connectionId, Handler<AsyncResult<Void>> handler)
     {
-
+        throw new java.lang.UnsupportedOperationException("Not supported yet");
     }
 
+    //Device_CreateFromConnectionString
     @Override
-    public void deviceConnectionIdEnableMethodsPut(String connectionId, Handler<AsyncResult<Void>> handler)
+    public void deviceCreateFromConnectionString(String transportType, String connectionString, Certificate caCertificate, Handler<AsyncResult<ConnectResponse>> handler)
     {
-
+        throw new java.lang.UnsupportedOperationException("Not supported yet");
     }
 
+    //Device_CreateFromX509
     @Override
-    public void deviceConnectionIdRoundtripMethodCallMethodNamePut(String connectionId, String methodName, RoundtripMethodCallBody requestAndResponse, Handler<AsyncResult<Void>> handler)
+    public void deviceCreateFromX509(String transportType, Object x509, Handler<AsyncResult<ConnectResponse>> handler)
     {
-
+        throw new java.lang.UnsupportedOperationException("Not supported yet");
     }
+
+    //Device_Destroy
+    @Override
+    public void deviceDestroy(String connectionId, Handler<AsyncResult<Void>> handler)
+    {
+        throw new java.lang.UnsupportedOperationException("Not supported yet");
+    }
+
+    //Device_Disconnect
+    @Override
+    public void deviceDisconnect(String connectionId, Handler<AsyncResult<Void>> handler)
+    {
+        throw new java.lang.UnsupportedOperationException("Not supported yet");
+    }
+
+    //Device_Disconnect2
+    @Override
+    public void deviceDisconnect2(String connectionId, Handler<AsyncResult<Void>> handler)
+    {
+        throw new java.lang.UnsupportedOperationException("Not supported yet");
+    }
+
+    //Device_EnableC2dMessages
+    @Override
+    public void deviceEnableC2dMessages(String connectionId, Handler<AsyncResult<Void>> handler)
+    {
+        throw new java.lang.UnsupportedOperationException("Not supported yet");
+    }
+
+    //Device_EnableMethods
+    @Override
+    public void deviceEnableMethods(String connectionId, Handler<AsyncResult<Void>> handler)
+    {
+        throw new java.lang.UnsupportedOperationException("Not supported yet");
+    }
+
+    //Device_EnableTwin
+    @Override
+    public void deviceEnableTwin(String connectionId, Handler<AsyncResult<Void>> handler)
+    {
+        throw new java.lang.UnsupportedOperationException("Not supported yet");
+    }
+
+    //Device_GetConnectionStatus
+    @Override
+    public void deviceGetConnectionStatus(String connectionId, Handler<AsyncResult<String>> handler)
+    {
+        throw new java.lang.UnsupportedOperationException("Not supported yet");
+    }
+
+    //Device_GetTwin
+    @Override
+    public void deviceGetTwin(String connectionId, Handler<AsyncResult<Object>> handler)
+    {
+        throw new java.lang.UnsupportedOperationException("Not supported yet");
+    }
+
+    //Device_PatchTwin
+    @Override
+    public void devicePatchTwin(String connectionId, Object props, Handler<AsyncResult<Void>> handler)
+    {
+        throw new java.lang.UnsupportedOperationException("Not supported yet");
+    }
+
+    //Device_Reconnect
+    @Override
+    public void deviceReconnect(String connectionId, Boolean forceRenewPassword, Handler<AsyncResult<Void>> handler)
+    {
+        throw new java.lang.UnsupportedOperationException("Not supported yet");
+    }
+
+    //Device_RoundtripMethodCall
+    @Override
+    public void deviceRoundtripMethodCall(String connectionId, String methodName, RoundtripMethodCallBody requestAndResponse, Handler<AsyncResult<Void>> handler)
+    {
+        throw new java.lang.UnsupportedOperationException("Not supported yet");
+    }
+
+    //Device_SendEvent
+    @Override
+    public void deviceSendEvent(String connectionId, Object eventBody, Handler<AsyncResult<Void>> handler)
+    {
+        throw new java.lang.UnsupportedOperationException("Not supported yet");
+    }
+
+    //Device_WaitForC2dMessage
+    @Override
+    public void deviceWaitForC2dMessage(String connectionId, Handler<AsyncResult<Object>> handler)
+    {
+        throw new java.lang.UnsupportedOperationException("Not supported yet");
+    }
+
+    //Device_WaitForConnectionStatusChange
+    @Override
+    public void deviceWaitForConnectionStatusChange(String connectionId, Handler<AsyncResult<String>> handler)
+    {
+        throw new java.lang.UnsupportedOperationException("Not supported yet");
+    }
+
+    //Device_WaitForDesiredPropertiesPatch
+    @Override
+    public void deviceWaitForDesiredPropertiesPatch(String connectionId, Handler<AsyncResult<Object>> handler)
+    {
+        throw new java.lang.UnsupportedOperationException("Not supported yet");
+    }
+
+
 }

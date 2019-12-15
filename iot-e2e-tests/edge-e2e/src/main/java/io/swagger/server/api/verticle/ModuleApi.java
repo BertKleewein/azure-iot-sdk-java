@@ -12,49 +12,76 @@ import java.util.List;
 import java.util.Map;
 
 public interface ModuleApi  {
-    //PUT_module_connectFromEnvironment_transportType
-    void moduleConnectFromEnvironmentTransportTypePut(String transportType, Handler<AsyncResult<ConnectResponse>> handler);
-    
-    //PUT_module_connect_transportType
-    void moduleConnectTransportTypePut(String transportType, String connectionString, Certificate caCertificate, Handler<AsyncResult<ConnectResponse>> handler);
-    
-    //PUT_module_connectionId_deviceMethod_deviceId
-    void moduleConnectionIdDeviceMethodDeviceIdPut(String connectionId, String deviceId, Object methodInvokeParameters, Handler<AsyncResult<Object>> handler);
-    
-    //PUT_module_connectionId_disconnect
-    void moduleConnectionIdDisconnectPut(String connectionId, Handler<AsyncResult<Void>> handler);
-    
-    //PUT_module_connectionId_enableInputMessages
-    void moduleConnectionIdEnableInputMessagesPut(String connectionId, Handler<AsyncResult<Void>> handler);
-    
-    //PUT_module_connectionId_enableMethods
-    void moduleConnectionIdEnableMethodsPut(String connectionId, Handler<AsyncResult<Void>> handler);
-    
-    //PUT_module_connectionId_enableTwin
-    void moduleConnectionIdEnableTwinPut(String connectionId, Handler<AsyncResult<Void>> handler);
-    
-    //PUT_module_connectionId_event
-    void moduleConnectionIdEventPut(String connectionId, String eventBody, Handler<AsyncResult<Void>> handler);
-    
-    //GET_module_connectionId_inputMessage_inputName
-    void moduleConnectionIdInputMessageInputNameGet(String connectionId, String inputName, Handler<AsyncResult<String>> handler);
-    
-    //PUT_module_connectionId_moduleMethod_deviceId_moduleId
-    void moduleConnectionIdModuleMethodDeviceIdModuleIdPut(String connectionId, String deviceId, String moduleId, Object methodInvokeParameters, Handler<AsyncResult<Object>> handler);
-    
-    //PUT_module_connectionId_outputEvent_outputName
-    void moduleConnectionIdOutputEventOutputNamePut(String connectionId, String outputName, String eventBody, Handler<AsyncResult<Void>> handler);
-    
-    //PUT_module_connectionId_roundtripMethodCall_methodName
-    void moduleConnectionIdRoundtripMethodCallMethodNamePut(String connectionId, String methodName, RoundtripMethodCallBody requestAndResponse, Handler<AsyncResult<Void>> handler);
-    
-    //GET_module_connectionId_twinDesiredPropPatch
-    void moduleConnectionIdTwinDesiredPropPatchGet(String connectionId, Handler<AsyncResult<Object>> handler);
-    
-    //GET_module_connectionId_twin
-    void moduleConnectionIdTwinGet(String connectionId, Handler<AsyncResult<Object>> handler);
-    
-    //PATCH_module_connectionId_twin
-    void moduleConnectionIdTwinPatch(String connectionId, Object props, Handler<AsyncResult<Void>> handler);
-    
+    //Module_Connect
+    void moduleConnect(String transportType, String connectionString, Certificate caCertificate, Handler<AsyncResult<ConnectResponse>> handler);
+
+    //Module_Connect2
+    void moduleConnect2(String connectionId, Handler<AsyncResult<Void>> handler);
+
+    //Module_ConnectFromEnvironment
+    void moduleConnectFromEnvironment(String transportType, Handler<AsyncResult<ConnectResponse>> handler);
+
+    //Module_CreateFromConnectionString
+    void moduleCreateFromConnectionString(String transportType, String connectionString, Certificate caCertificate, Handler<AsyncResult<ConnectResponse>> handler);
+
+    //Module_CreateFromEnvironment
+    void moduleCreateFromEnvironment(String transportType, Handler<AsyncResult<ConnectResponse>> handler);
+
+    //Module_CreateFromX509
+    void moduleCreateFromX509(String transportType, Object x509, Handler<AsyncResult<ConnectResponse>> handler);
+
+    //Module_Destroy
+    void moduleDestroy(String connectionId, Handler<AsyncResult<Void>> handler);
+
+    //Module_Disconnect
+    void moduleDisconnect(String connectionId, Handler<AsyncResult<Void>> handler);
+
+    //Module_Disconnect2
+    void moduleDisconnect2(String connectionId, Handler<AsyncResult<Void>> handler);
+
+    //Module_EnableInputMessages
+    void moduleEnableInputMessages(String connectionId, Handler<AsyncResult<Void>> handler);
+
+    //Module_EnableMethods
+    void moduleEnableMethods(String connectionId, Handler<AsyncResult<Void>> handler);
+
+    //Module_EnableTwin
+    void moduleEnableTwin(String connectionId, Handler<AsyncResult<Void>> handler);
+
+    //Module_GetConnectionStatus
+    void moduleGetConnectionStatus(String connectionId, Handler<AsyncResult<String>> handler);
+
+    //Module_GetTwin
+    void moduleGetTwin(String connectionId, Handler<AsyncResult<Object>> handler);
+
+    //Module_InvokeDeviceMethod
+    void moduleInvokeDeviceMethod(String connectionId, String deviceId, Object methodInvokeParameters, Handler<AsyncResult<Object>> handler);
+
+    //Module_InvokeModuleMethod
+    void moduleInvokeModuleMethod(String connectionId, String deviceId, String moduleId, Object methodInvokeParameters, Handler<AsyncResult<Object>> handler);
+
+    //Module_PatchTwin
+    void modulePatchTwin(String connectionId, Object props, Handler<AsyncResult<Void>> handler);
+
+    //Module_Reconnect
+    void moduleReconnect(String connectionId, Boolean forceRenewPassword, Handler<AsyncResult<Void>> handler);
+
+    //Module_RoundtripMethodCall
+    void moduleRoundtripMethodCall(String connectionId, String methodName, RoundtripMethodCallBody requestAndResponse, Handler<AsyncResult<Void>> handler);
+
+    //Module_SendEvent
+    void moduleSendEvent(String connectionId, Object eventBody, Handler<AsyncResult<Void>> handler);
+
+    //Module_SendOutputEvent
+    void moduleSendOutputEvent(String connectionId, String outputName, Object eventBody, Handler<AsyncResult<Void>> handler);
+
+    //Module_WaitForConnectionStatusChange
+    void moduleWaitForConnectionStatusChange(String connectionId, Handler<AsyncResult<String>> handler);
+
+    //Module_WaitForDesiredPropertiesPatch
+    void moduleWaitForDesiredPropertiesPatch(String connectionId, Handler<AsyncResult<Object>> handler);
+
+    //Module_WaitForInputMessage
+    void moduleWaitForInputMessage(String connectionId, String inputName, Handler<AsyncResult<Object>> handler);
+
 }

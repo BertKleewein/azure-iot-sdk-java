@@ -1,36 +1,58 @@
 package io.swagger.server.api.verticle;
 
+// Added 1 line in merge
 import glue.ServiceGlue;
+
 import io.swagger.server.api.model.ConnectResponse;
+import io.swagger.server.api.MainApiException;
+
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 
+import java.util.List;
+import java.util.Map;
 
+// Added all Override annotations and method bodies in merge
+
+// Changed from interface to class in merge
 public class ServiceApiImpl implements ServiceApi
 {
+    // Added 1 line in merge
     public static ServiceGlue _serviceGlue = new ServiceGlue();
 
+    //Service_Connect
     @Override
-    public void serviceConnectPut(String connectionString, Handler<AsyncResult<ConnectResponse>> handler)
+    public void serviceConnect(String connectionString, Handler<AsyncResult<ConnectResponse>> handler)
     {
         this._serviceGlue.connect(connectionString, handler);
     }
 
+    //Service_Disconnect
     @Override
-    public void serviceConnectionIdDeviceMethodDeviceIdPut(String connectionId, String deviceId, Object methodInvokeParameters, Handler<AsyncResult<Object>> handler)
-    {
-        this._serviceGlue.invokeDeviceMethod(connectionId, deviceId, methodInvokeParameters, handler);
-    }
-
-    @Override
-    public void serviceConnectionIdDisconnectPut(String connectionId, Handler<AsyncResult<Void>> handler)
+    public void serviceDisconnect(String connectionId, Handler<AsyncResult<Void>> handler)
     {
         this._serviceGlue.disconnect(connectionId, handler);
     }
 
+    //Service_InvokeDeviceMethod
     @Override
-    public void serviceConnectionIdModuleMethodDeviceIdModuleIdPut(String connectionId, String deviceId, String moduleId, Object methodInvokeParameters, Handler<AsyncResult<Object>> handler)
+    public void serviceInvokeDeviceMethod(String connectionId, String deviceId, Object methodInvokeParameters, Handler<AsyncResult<Object>> handler)
+    {
+        this._serviceGlue.invokeDeviceMethod(connectionId, deviceId, methodInvokeParameters, handler);
+    }
+
+    //Service_InvokeModuleMethod
+    @Override
+    public void serviceInvokeModuleMethod(String connectionId, String deviceId, String moduleId, Object methodInvokeParameters, Handler<AsyncResult<Object>> handler)
     {
         this._serviceGlue.invokeModuleMethod(connectionId, deviceId, moduleId, methodInvokeParameters, handler);
     }
+
+    //Service_SendC2d
+    @Override
+    public void serviceSendC2d(String connectionId, String deviceId, Object eventBody, Handler<AsyncResult<Void>> handler)
+    {
+        throw new java.lang.UnsupportedOperationException("Not supported yet");
+    }
+
 }

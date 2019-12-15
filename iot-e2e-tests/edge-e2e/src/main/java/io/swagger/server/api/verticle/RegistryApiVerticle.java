@@ -15,13 +15,15 @@ import java.util.List;
 import java.util.Map;
 
 public class RegistryApiVerticle extends AbstractVerticle {
-    final static Logger LOGGER = LoggerFactory.getLogger(RegistryApiVerticle.class); 
-    
-    final static String PUT_REGISTRY_CONNECT_SERVICE_ID = "PUT_registry_connect";
-    final static String PUT_REGISTRY_CONNECTIONID_DISCONNECT__SERVICE_ID = "PUT_registry_connectionId_disconnect_";
-    final static String GET_REGISTRY_CONNECTIONID_MODULETWIN_DEVICEID_MODULEID_SERVICE_ID = "GET_registry_connectionId_moduleTwin_deviceId_moduleId";
-    final static String PATCH_REGISTRY_CONNECTIONID_MODULETWIN_DEVICEID_MODULEID_SERVICE_ID = "PATCH_registry_connectionId_moduleTwin_deviceId_moduleId";
-    
+    final static Logger LOGGER = LoggerFactory.getLogger(RegistryApiVerticle.class);
+
+    final static String REGISTRY_CONNECT_SERVICE_ID = "Registry_Connect";
+    final static String REGISTRY_DISCONNECT_SERVICE_ID = "Registry_Disconnect";
+    final static String REGISTRY_GETDEVICETWIN_SERVICE_ID = "Registry_GetDeviceTwin";
+    final static String REGISTRY_GETMODULETWIN_SERVICE_ID = "Registry_GetModuleTwin";
+    final static String REGISTRY_PATCHDEVICETWIN_SERVICE_ID = "Registry_PatchDeviceTwin";
+    final static String REGISTRY_PATCHMODULETWIN_SERVICE_ID = "Registry_PatchModuleTwin";
+
     final RegistryApi service;
 
     public RegistryApiVerticle() {
@@ -36,86 +38,207 @@ public class RegistryApiVerticle extends AbstractVerticle {
 
     @Override
     public void start() throws Exception {
-        
-        //Consumer for PUT_registry_connect
-        vertx.eventBus().<JsonObject> consumer(PUT_REGISTRY_CONNECT_SERVICE_ID).handler(message -> {
+
+        //Consumer for Registry_Connect
+        vertx.eventBus().<JsonObject> consumer(REGISTRY_CONNECT_SERVICE_ID).handler(message -> {
             try {
-                String connectionString = message.body().getString("connectionString");
-                service.registryConnectPut(connectionString, result -> {
+                // Workaround for #allParams section clearing the vendorExtensions map
+                String serviceId = "Registry_Connect";
+                String connectionStringParam = message.body().getString("connectionString");
+                if(connectionStringParam == null) {
+                    manageError(message, new MainApiException(400, "connectionString is required"), serviceId);
+                    return;
+                }
+                String connectionString = connectionStringParam;
+                service.registryConnect(connectionString, result -> {
                     if (result.succeeded())
                         message.reply(new JsonObject(Json.encode(result.result())).encodePrettily());
                     else {
                         Throwable cause = result.cause();
-                        manageError(message, cause, "PUT_registry_connect");
+                        manageError(message, cause, "Registry_Connect");
                     }
                 });
             } catch (Exception e) {
-                logUnexpectedError("PUT_registry_connect", e);
+                logUnexpectedError("Registry_Connect", e);
                 message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
             }
         });
-        
-        //Consumer for PUT_registry_connectionId_disconnect_
-        vertx.eventBus().<JsonObject> consumer(PUT_REGISTRY_CONNECTIONID_DISCONNECT__SERVICE_ID).handler(message -> {
+
+        //Consumer for Registry_Disconnect
+        vertx.eventBus().<JsonObject> consumer(REGISTRY_DISCONNECT_SERVICE_ID).handler(message -> {
             try {
-                String connectionId = message.body().getString("connectionId");
-                service.registryConnectionIdDisconnectPut(connectionId, result -> {
+                // Workaround for #allParams section clearing the vendorExtensions map
+                String serviceId = "Registry_Disconnect";
+                String connectionIdParam = message.body().getString("connectionId");
+                if(connectionIdParam == null) {
+                    manageError(message, new MainApiException(400, "connectionId is required"), serviceId);
+                    return;
+                }
+                String connectionId = connectionIdParam;
+                service.registryDisconnect(connectionId, result -> {
                     if (result.succeeded())
                         message.reply(null);
                     else {
                         Throwable cause = result.cause();
-                        manageError(message, cause, "PUT_registry_connectionId_disconnect_");
+                        manageError(message, cause, "Registry_Disconnect");
                     }
                 });
             } catch (Exception e) {
-                logUnexpectedError("PUT_registry_connectionId_disconnect_", e);
+                logUnexpectedError("Registry_Disconnect", e);
                 message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
             }
         });
-        
-        //Consumer for GET_registry_connectionId_moduleTwin_deviceId_moduleId
-        vertx.eventBus().<JsonObject> consumer(GET_REGISTRY_CONNECTIONID_MODULETWIN_DEVICEID_MODULEID_SERVICE_ID).handler(message -> {
+
+        //Consumer for Registry_GetDeviceTwin
+        vertx.eventBus().<JsonObject> consumer(REGISTRY_GETDEVICETWIN_SERVICE_ID).handler(message -> {
             try {
-                String connectionId = message.body().getString("connectionId");
-                String deviceId = message.body().getString("deviceId");
-                String moduleId = message.body().getString("moduleId");
-                service.registryConnectionIdModuleTwinDeviceIdModuleIdGet(connectionId, deviceId, moduleId, result -> {
+                // Workaround for #allParams section clearing the vendorExtensions map
+                String serviceId = "Registry_GetDeviceTwin";
+                String connectionIdParam = message.body().getString("connectionId");
+                if(connectionIdParam == null) {
+                    manageError(message, new MainApiException(400, "connectionId is required"), serviceId);
+                    return;
+                }
+                String connectionId = connectionIdParam;
+                String deviceIdParam = message.body().getString("deviceId");
+                if(deviceIdParam == null) {
+                    manageError(message, new MainApiException(400, "deviceId is required"), serviceId);
+                    return;
+                }
+                String deviceId = deviceIdParam;
+                service.registryGetDeviceTwin(connectionId, deviceId, result -> {
                     if (result.succeeded())
                         message.reply(new JsonObject(Json.encode(result.result())).encodePrettily());
                     else {
                         Throwable cause = result.cause();
-                        manageError(message, cause, "GET_registry_connectionId_moduleTwin_deviceId_moduleId");
+                        manageError(message, cause, "Registry_GetDeviceTwin");
                     }
                 });
             } catch (Exception e) {
-                logUnexpectedError("GET_registry_connectionId_moduleTwin_deviceId_moduleId", e);
+                logUnexpectedError("Registry_GetDeviceTwin", e);
                 message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
             }
         });
-        
-        //Consumer for PATCH_registry_connectionId_moduleTwin_deviceId_moduleId
-        vertx.eventBus().<JsonObject> consumer(PATCH_REGISTRY_CONNECTIONID_MODULETWIN_DEVICEID_MODULEID_SERVICE_ID).handler(message -> {
+
+        //Consumer for Registry_GetModuleTwin
+        vertx.eventBus().<JsonObject> consumer(REGISTRY_GETMODULETWIN_SERVICE_ID).handler(message -> {
             try {
-                String connectionId = message.body().getString("connectionId");
-                String deviceId = message.body().getString("deviceId");
-                String moduleId = message.body().getString("moduleId");
-                Object props = message.body().getJsonObject("props");
-                service.registryConnectionIdModuleTwinDeviceIdModuleIdPatch(connectionId, deviceId, moduleId, props, result -> {
+                // Workaround for #allParams section clearing the vendorExtensions map
+                String serviceId = "Registry_GetModuleTwin";
+                String connectionIdParam = message.body().getString("connectionId");
+                if(connectionIdParam == null) {
+                    manageError(message, new MainApiException(400, "connectionId is required"), serviceId);
+                    return;
+                }
+                String connectionId = connectionIdParam;
+                String deviceIdParam = message.body().getString("deviceId");
+                if(deviceIdParam == null) {
+                    manageError(message, new MainApiException(400, "deviceId is required"), serviceId);
+                    return;
+                }
+                String deviceId = deviceIdParam;
+                String moduleIdParam = message.body().getString("moduleId");
+                if(moduleIdParam == null) {
+                    manageError(message, new MainApiException(400, "moduleId is required"), serviceId);
+                    return;
+                }
+                String moduleId = moduleIdParam;
+                service.registryGetModuleTwin(connectionId, deviceId, moduleId, result -> {
+                    if (result.succeeded())
+                        message.reply(new JsonObject(Json.encode(result.result())).encodePrettily());
+                    else {
+                        Throwable cause = result.cause();
+                        manageError(message, cause, "Registry_GetModuleTwin");
+                    }
+                });
+            } catch (Exception e) {
+                logUnexpectedError("Registry_GetModuleTwin", e);
+                message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
+            }
+        });
+
+        //Consumer for Registry_PatchDeviceTwin
+        vertx.eventBus().<JsonObject> consumer(REGISTRY_PATCHDEVICETWIN_SERVICE_ID).handler(message -> {
+            try {
+                // Workaround for #allParams section clearing the vendorExtensions map
+                String serviceId = "Registry_PatchDeviceTwin";
+                String connectionIdParam = message.body().getString("connectionId");
+                if(connectionIdParam == null) {
+                    manageError(message, new MainApiException(400, "connectionId is required"), serviceId);
+                    return;
+                }
+                String connectionId = connectionIdParam;
+                String deviceIdParam = message.body().getString("deviceId");
+                if(deviceIdParam == null) {
+                    manageError(message, new MainApiException(400, "deviceId is required"), serviceId);
+                    return;
+                }
+                String deviceId = deviceIdParam;
+                String propsParam = message.body().getString("props");
+                if(propsParam == null) {
+                    manageError(message, new MainApiException(400, "props is required"), serviceId);
+                    return;
+                }
+                Object props = Json.mapper.readValue(propsParam, Object.class);
+                service.registryPatchDeviceTwin(connectionId, deviceId, props, result -> {
                     if (result.succeeded())
                         message.reply(null);
                     else {
                         Throwable cause = result.cause();
-                        manageError(message, cause, "PATCH_registry_connectionId_moduleTwin_deviceId_moduleId");
+                        manageError(message, cause, "Registry_PatchDeviceTwin");
                     }
                 });
             } catch (Exception e) {
-                logUnexpectedError("PATCH_registry_connectionId_moduleTwin_deviceId_moduleId", e);
+                logUnexpectedError("Registry_PatchDeviceTwin", e);
                 message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
             }
         });
-        
+
+        //Consumer for Registry_PatchModuleTwin
+        vertx.eventBus().<JsonObject> consumer(REGISTRY_PATCHMODULETWIN_SERVICE_ID).handler(message -> {
+            try {
+                // Workaround for #allParams section clearing the vendorExtensions map
+                String serviceId = "Registry_PatchModuleTwin";
+                String connectionIdParam = message.body().getString("connectionId");
+                if(connectionIdParam == null) {
+                    manageError(message, new MainApiException(400, "connectionId is required"), serviceId);
+                    return;
+                }
+                String connectionId = connectionIdParam;
+                String deviceIdParam = message.body().getString("deviceId");
+                if(deviceIdParam == null) {
+                    manageError(message, new MainApiException(400, "deviceId is required"), serviceId);
+                    return;
+                }
+                String deviceId = deviceIdParam;
+                String moduleIdParam = message.body().getString("moduleId");
+                if(moduleIdParam == null) {
+                    manageError(message, new MainApiException(400, "moduleId is required"), serviceId);
+                    return;
+                }
+                String moduleId = moduleIdParam;
+                String propsParam = message.body().getString("props");
+                if(propsParam == null) {
+                    manageError(message, new MainApiException(400, "props is required"), serviceId);
+                    return;
+                }
+                Object props = Json.mapper.readValue(propsParam, Object.class);
+                service.registryPatchModuleTwin(connectionId, deviceId, moduleId, props, result -> {
+                    if (result.succeeded())
+                        message.reply(null);
+                    else {
+                        Throwable cause = result.cause();
+                        manageError(message, cause, "Registry_PatchModuleTwin");
+                    }
+                });
+            } catch (Exception e) {
+                logUnexpectedError("Registry_PatchModuleTwin", e);
+                message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
+            }
+        });
+
     }
-    
+
     private void manageError(Message<JsonObject> message, Throwable cause, String serviceName) {
         int code = MainApiException.INTERNAL_SERVER_ERROR.getStatusCode();
         String statusMessage = MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage();
@@ -123,12 +246,12 @@ public class RegistryApiVerticle extends AbstractVerticle {
             code = ((MainApiException)cause).getStatusCode();
             statusMessage = ((MainApiException)cause).getStatusMessage();
         } else {
-            logUnexpectedError(serviceName, cause); 
+            logUnexpectedError(serviceName, cause);
         }
-            
+
         message.fail(code, statusMessage);
     }
-    
+
     private void logUnexpectedError(String serviceName, Throwable cause) {
         LOGGER.error("Unexpected error in "+ serviceName, cause);
     }

@@ -9,7 +9,7 @@ public final class ModuleApiException extends MainApiException {
     public ModuleApiException(int statusCode, String statusMessage) {
         super(statusCode, statusMessage);
     }
-    
-    
+
+
 
 }

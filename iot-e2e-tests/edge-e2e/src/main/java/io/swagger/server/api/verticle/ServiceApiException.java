@@ -7,7 +7,7 @@ public final class ServiceApiException extends MainApiException {
     public ServiceApiException(int statusCode, String statusMessage) {
         super(statusCode, statusMessage);
     }
-    
-    
+
+
 
 }

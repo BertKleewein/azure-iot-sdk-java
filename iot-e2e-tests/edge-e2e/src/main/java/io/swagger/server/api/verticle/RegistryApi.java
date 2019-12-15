@@ -10,16 +10,22 @@ import java.util.List;
 import java.util.Map;
 
 public interface RegistryApi  {
-    //PUT_registry_connect
-    void registryConnectPut(String connectionString, Handler<AsyncResult<ConnectResponse>> handler);
-    
-    //PUT_registry_connectionId_disconnect_
-    void registryConnectionIdDisconnectPut(String connectionId, Handler<AsyncResult<Void>> handler);
-    
-    //GET_registry_connectionId_moduleTwin_deviceId_moduleId
-    void registryConnectionIdModuleTwinDeviceIdModuleIdGet(String connectionId, String deviceId, String moduleId, Handler<AsyncResult<Object>> handler);
-    
-    //PATCH_registry_connectionId_moduleTwin_deviceId_moduleId
-    void registryConnectionIdModuleTwinDeviceIdModuleIdPatch(String connectionId, String deviceId, String moduleId, Object props, Handler<AsyncResult<Void>> handler);
-    
+    //Registry_Connect
+    void registryConnect(String connectionString, Handler<AsyncResult<ConnectResponse>> handler);
+
+    //Registry_Disconnect
+    void registryDisconnect(String connectionId, Handler<AsyncResult<Void>> handler);
+
+    //Registry_GetDeviceTwin
+    void registryGetDeviceTwin(String connectionId, String deviceId, Handler<AsyncResult<Object>> handler);
+
+    //Registry_GetModuleTwin
+    void registryGetModuleTwin(String connectionId, String deviceId, String moduleId, Handler<AsyncResult<Object>> handler);
+
+    //Registry_PatchDeviceTwin
+    void registryPatchDeviceTwin(String connectionId, String deviceId, Object props, Handler<AsyncResult<Void>> handler);
+
+    //Registry_PatchModuleTwin
+    void registryPatchModuleTwin(String connectionId, String deviceId, String moduleId, Object props, Handler<AsyncResult<Void>> handler);
+
 }

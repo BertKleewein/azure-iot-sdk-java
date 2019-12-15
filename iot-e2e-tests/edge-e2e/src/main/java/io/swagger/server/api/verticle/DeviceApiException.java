@@ -9,7 +9,7 @@ public final class DeviceApiException extends MainApiException {
     public DeviceApiException(int statusCode, String statusMessage) {
         super(statusCode, statusMessage);
     }
-    
-    
+
+
 
 }

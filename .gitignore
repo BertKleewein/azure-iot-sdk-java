@@ -226,3 +226,5 @@ vertx.log.lck
 **/gradlew*
 **/.gradle
 **/build
+
+!**/vertx-default-jul-logging.properties

@@ -7,9 +7,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * certificate in the body of a message
  **/
-@JsonInclude(JsonInclude.Include.NON_NULL) 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Certificate   {
-  
+
   private String cert = null;
 
   public Certificate () {
@@ -20,7 +20,7 @@ public class Certificate   {
     this.cert = cert;
   }
 
-    
+
   @JsonProperty("cert")
   public String getCert() {
     return cert;
@@ -51,7 +51,7 @@ public class Certificate   {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class Certificate {\n");
-    
+
     sb.append("    cert: ").append(toIndentedString(cert)).append("\n");
     sb.append("}");
     return sb.toString();

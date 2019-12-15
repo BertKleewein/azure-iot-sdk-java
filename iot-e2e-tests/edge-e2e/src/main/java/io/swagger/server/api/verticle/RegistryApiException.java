@@ -7,7 +7,7 @@ public final class RegistryApiException extends MainApiException {
     public RegistryApiException(int statusCode, String statusMessage) {
         super(statusCode, statusMessage);
     }
-    
-    
+
+
 
 }

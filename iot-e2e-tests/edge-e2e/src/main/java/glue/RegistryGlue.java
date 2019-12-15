@@ -6,7 +6,6 @@ import com.microsoft.azure.sdk.iot.service.devicetwin.Pair;
 import com.microsoft.azure.sdk.iot.service.exceptions.IotHubException;
 import io.swagger.server.api.MainApiException;
 import io.swagger.server.api.model.ConnectResponse;
-import io.swagger.server.api.verticle.WrappedDeviceTwinDevice;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;

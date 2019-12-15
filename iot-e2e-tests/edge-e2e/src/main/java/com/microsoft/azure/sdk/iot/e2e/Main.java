@@ -13,6 +13,7 @@ public class Main {
         vertx.deployVerticle(myVerticle, res -> {
             if (res.succeeded()) {
                 System.out.println("Deployment id is: " + res.result());
+                System.out.println("Listening on port " + myVerticle.getServerPort());
             } else {
                 System.out.println("Deployment failed!");
             }

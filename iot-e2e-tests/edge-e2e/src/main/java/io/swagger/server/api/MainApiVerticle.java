@@ -1,7 +1,6 @@
 package io.swagger.server.api;
 
 import java.nio.charset.Charset;
-import java.util.function.Function;
 
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.github.phiz71.vertx.swagger.router.OperationIdServiceIdResolver;
@@ -12,19 +11,31 @@ import io.swagger.parser.SwaggerParser;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Context;
 import io.vertx.core.Future;
-import io.vertx.core.eventbus.DeliveryOptions;
 import io.vertx.core.file.FileSystem;
 import io.vertx.core.json.Json;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.core.Vertx;
 import io.vertx.ext.web.Router;
+
+// Added 3 lines in merge
+import java.util.function.Function;
+import io.vertx.core.eventbus.DeliveryOptions;
 import io.vertx.ext.web.RoutingContext;
 
 public class MainApiVerticle extends AbstractVerticle {
     final static Logger LOGGER = LoggerFactory.getLogger(MainApiVerticle.class);
 
+    private int serverPort = 8080;
     protected Router router;
+
+    public int getServerPort() {
+        return serverPort;
+    }
+
+    public void setServerPort(int serverPort) {
+        this.serverPort = serverPort;
+    }
 
     @Override
     public void init(Vertx vertx, Context context) {
@@ -39,6 +50,7 @@ public class MainApiVerticle extends AbstractVerticle {
         vertxFileSystem.readFile("swagger.json", readFile -> {
             if (readFile.succeeded()) {
                 Swagger swagger = new SwaggerParser().parse(readFile.result().toString(Charset.forName("utf-8")));
+                // Changed constructor in merge to add setSendTimeout()
                 Router swaggerRouter = SwaggerRouter.swaggerRouter(router, swagger, vertx.eventBus(), new OperationIdServiceIdResolver(), new Function<RoutingContext, DeliveryOptions>() {
                     @Override
                     public DeliveryOptions apply(RoutingContext t) {
@@ -49,8 +61,13 @@ public class MainApiVerticle extends AbstractVerticle {
 
                 vertx.createHttpServer()
                     .requestHandler(swaggerRouter::accept)
-                    .listen(8080);
-                startFuture.complete();
+                    .listen(serverPort, h -> {
+                        if (h.succeeded()) {
+                            startFuture.complete();
+                        } else {
+                            startFuture.fail(h.cause());
+                        }
+                    });
             } else {
             	startFuture.fail(readFile.cause());
             }
@@ -68,29 +85,21 @@ public class MainApiVerticle extends AbstractVerticle {
             }
         });
 
-        /*
-        //
-        // We will most likely never implement this verticle because it doesn't add value.
-        // however, it still needs to exist in the swagger (so we can use the node implementation),
-        // so it ends up in the generated code.  It should probably be removed from the swagger, but
-        // that's a bigger change.
-        //
-        vertx.deployVerticle("io.swagger.server.api.verticle.EventhubApiVerticle", res -> {
-            if (res.succeeded()) {
-                LOGGER.info("EventhubApiVerticle : Deployed");
-            } else {
-                startFuture.fail(res.cause());
-                LOGGER.error("EventhubApiVerticle : Deployment failed");
-            }
-        });
-        */
-
         vertx.deployVerticle("io.swagger.server.api.verticle.ModuleApiVerticle", res -> {
             if (res.succeeded()) {
                 LOGGER.info("ModuleApiVerticle : Deployed");
             } else {
                 startFuture.fail(res.cause());
                 LOGGER.error("ModuleApiVerticle : Deployment failed");
+            }
+        });
+
+        vertx.deployVerticle("io.swagger.server.api.verticle.NetApiVerticle", res -> {
+            if (res.succeeded()) {
+                LOGGER.info("NetApiVerticle : Deployed");
+            } else {
+                startFuture.fail(res.cause());
+                LOGGER.error("NetApiVerticle : Deployment failed");
             }
         });
 
@@ -120,7 +129,6 @@ public class MainApiVerticle extends AbstractVerticle {
                 LOGGER.error("WrapperApiVerticle : Deployment failed");
             }
         });
-
 
     }
 }

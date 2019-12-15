@@ -14,7 +14,6 @@ import com.microsoft.azure.sdk.iot.device.transport.RetryDecision;
 import com.microsoft.azure.sdk.iot.device.transport.RetryPolicy;
 import io.swagger.server.api.model.Certificate;
 import io.swagger.server.api.model.ConnectResponse;
-import io.swagger.server.api.model.MethodRequestResponse;
 import io.swagger.server.api.MainApiException;
 import io.swagger.server.api.model.RoundtripMethodCallBody;
 import io.vertx.core.AsyncResult;
@@ -417,10 +416,10 @@ public class ModuleGlue
     protected static class MessageCallback implements com.microsoft.azure.sdk.iot.device.MessageCallback
     {
         ModuleClient _client;
-        Handler<AsyncResult<String>> _handler;
+        Handler<AsyncResult<Object>> _handler;
         String _inputName;
 
-        public MessageCallback(ModuleClient client, String inputName, Handler<AsyncResult<String>> handler)
+        public MessageCallback(ModuleClient client, String inputName, Handler<AsyncResult<Object>> handler)
         {
             this._client = client;
             this._inputName = inputName;
@@ -433,22 +432,15 @@ public class ModuleGlue
             this._client.setMessageCallback(this._inputName, null, null);
             String result = new String(msg.getBytes(), Message.DEFAULT_IOTHUB_MESSAGE_CHARSET);
             System.out.printf("result = %s%n", result);
-            try
+            if (this._handler != null)
             {
-                if (this._handler != null)
-                {
-                    this._handler.handle(Future.succeededFuture(result));
-                }
-            } catch (Exception e)
-            {
-                System.out.printf("Ignoring exception %s%n", e.toString());
-
+                this._handler.handle(Future.succeededFuture(new JsonObject(result)));
             }
             return IotHubMessageResult.COMPLETE;
         }
     }
 
-    public void waitForInputMessage(String connectionId, String inputName, Handler<AsyncResult<String>> handler)
+    public void waitForInputMessage(String connectionId, String inputName, Handler<AsyncResult<Object>> handler)
     {
         System.out.printf("waitForInputMessage with %s, %s%n", connectionId, inputName);
 
@@ -604,11 +596,11 @@ public class ModuleGlue
         }
     }
 
-    public void sendOutputEvent(String connectionId, String outputName, String eventBody, Handler<AsyncResult<Void>> handler)
+    public void sendOutputEvent(String connectionId, String outputName, Object eventBody, Handler<AsyncResult<Void>> handler)
     {
         System.out.printf("sendOutputEvent called for %s, %s%n", connectionId, outputName);
         System.out.println(eventBody);
-        Message msg = new Message(eventBody);
+        Message msg = new Message(Json.encode(eventBody));
         msg.setOutputName(outputName);
         this.sendEventHelper(connectionId, msg, handler);
     }

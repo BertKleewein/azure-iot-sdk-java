@@ -7,9 +7,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * result of a connection to a service, device, or module client
  **/
-@JsonInclude(JsonInclude.Include.NON_NULL) 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ConnectResponse   {
-  
+
   private String connectionId = null;
 
   public ConnectResponse () {
@@ -20,7 +20,7 @@ public class ConnectResponse   {
     this.connectionId = connectionId;
   }
 
-    
+
   @JsonProperty("connectionId")
   public String getConnectionId() {
     return connectionId;
@@ -51,7 +51,7 @@ public class ConnectResponse   {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class ConnectResponse {\n");
-    
+
     sb.append("    connectionId: ").append(toIndentedString(connectionId)).append("\n");
     sb.append("}");
     return sb.toString();
