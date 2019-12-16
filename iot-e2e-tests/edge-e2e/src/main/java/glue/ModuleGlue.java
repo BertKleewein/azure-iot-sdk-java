@@ -12,11 +12,8 @@ import com.microsoft.azure.sdk.iot.device.exceptions.TransportException;
 import com.microsoft.azure.sdk.iot.device.transport.ExponentialBackoffWithJitter;
 import com.microsoft.azure.sdk.iot.device.transport.RetryDecision;
 import com.microsoft.azure.sdk.iot.device.transport.RetryPolicy;
-import io.swagger.server.api.model.Certificate;
-import io.swagger.server.api.model.ConnectResponse;
+import io.swagger.server.api.model.*;
 import io.swagger.server.api.MainApiException;
-import io.swagger.server.api.model.EventBody;
-import io.swagger.server.api.model.RoundtripMethodCallBody;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
@@ -141,7 +138,7 @@ public class ModuleGlue
     }
 
 
-    public void invokeDeviceMethod(String connectionId, String deviceId, Object methodInvokeParameters, Handler<AsyncResult<Object>> handler)
+    public void invokeDeviceMethod(String connectionId, String deviceId, MethodInvoke methodInvokeParameters, Handler<AsyncResult<Object>> handler)
     {
         ModuleClient client = getClient(connectionId);
         if (client == null)
@@ -150,12 +147,7 @@ public class ModuleGlue
         }
         else
         {
-            JsonObject params = (JsonObject) methodInvokeParameters;
-            String methodName = params.getString("methodName");
-            String payload = params.getString("payload");
-            int responseTimeout = params.getInteger("responseTimeoutInSeconds", 0);
-            int connectionTimeout = params.getInteger("connectTimeoutInSeconds", 0);
-            MethodRequest request = new MethodRequest(methodName, payload, responseTimeout, connectionTimeout);
+            MethodRequest request = new MethodRequest(methodInvokeParameters.getMethodName(), methodInvokeParameters.getPayload().toString(), methodInvokeParameters.getResponseTimeoutInSeconds(), methodInvokeParameters.getConnectTimeoutInSeconds());
             try
             {
                 MethodResult result = client.invokeMethod(deviceId, request);
@@ -571,7 +563,7 @@ public class ModuleGlue
     }
 
 
-    public void invokeModuleMethod(String connectionId, String deviceId, String moduleId, Object methodInvokeParameters, Handler<AsyncResult<Object>> handler)
+    public void invokeModuleMethod(String connectionId, String deviceId, String moduleId, MethodInvoke methodInvokeParameters, Handler<AsyncResult<Object>> handler)
     {
         ModuleClient client = getClient(connectionId);
         if (client == null)
@@ -580,12 +572,7 @@ public class ModuleGlue
         }
         else
         {
-            JsonObject params = (JsonObject) methodInvokeParameters;
-            String methodName = params.getString("methodName");
-            String payload = params.getString("payload");
-            int responseTimeout = params.getInteger("responseTimeoutInSeconds", 0);
-            int connectionTimeout = params.getInteger("connectTimeoutInSeconds", 0);
-            MethodRequest request = new MethodRequest(methodName, payload, responseTimeout, connectionTimeout);
+            MethodRequest request = new MethodRequest(methodInvokeParameters.getMethodName(), methodInvokeParameters.getPayload().toString(), methodInvokeParameters.getResponseTimeoutInSeconds(), methodInvokeParameters.getConnectTimeoutInSeconds());
             try
             {
                 MethodResult result = client.invokeMethod(deviceId, moduleId, request);
