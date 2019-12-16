@@ -2,6 +2,7 @@ package io.swagger.server.api.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * body for an invoming or outgoing event or message
@@ -9,9 +10,45 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class EventBody   {
 
+  private Object body = null;
+  private Object hortonFlags = null;
+  private Object attributes = null;
 
   public EventBody () {
 
+  }
+
+  public EventBody (Object body, Object hortonFlags, Object attributes) {
+    this.body = body;
+    this.hortonFlags = hortonFlags;
+    this.attributes = attributes;
+  }
+
+
+  @JsonProperty("body")
+  public Object getBody() {
+    return body;
+  }
+  public void setBody(Object body) {
+    this.body = body;
+  }
+
+
+  @JsonProperty("horton_flags")
+  public Object getHortonFlags() {
+    return hortonFlags;
+  }
+  public void setHortonFlags(Object hortonFlags) {
+    this.hortonFlags = hortonFlags;
+  }
+
+
+  @JsonProperty("attributes")
+  public Object getAttributes() {
+    return attributes;
+  }
+  public void setAttributes(Object attributes) {
+    this.attributes = attributes;
   }
 
 
@@ -24,12 +61,14 @@ public class EventBody   {
       return false;
     }
     EventBody eventBody = (EventBody) o;
-    return true;
+    return Objects.equals(body, eventBody.body) &&
+        Objects.equals(hortonFlags, eventBody.hortonFlags) &&
+        Objects.equals(attributes, eventBody.attributes);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash();
+    return Objects.hash(body, hortonFlags, attributes);
   }
 
   @Override
@@ -37,6 +76,9 @@ public class EventBody   {
     StringBuilder sb = new StringBuilder();
     sb.append("class EventBody {\n");
 
+    sb.append("    body: ").append(toIndentedString(body)).append("\n");
+    sb.append("    hortonFlags: ").append(toIndentedString(hortonFlags)).append("\n");
+    sb.append("    attributes: ").append(toIndentedString(attributes)).append("\n");
     sb.append("}");
     return sb.toString();
   }

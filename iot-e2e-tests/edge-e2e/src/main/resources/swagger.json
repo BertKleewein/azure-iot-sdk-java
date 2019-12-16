@@ -1746,6 +1746,23 @@
     },
     "eventBody" : {
       "type" : "object",
+      "properties" : {
+        "body" : {
+          "type" : "object",
+          "description" : "payload to send to the method",
+          "properties" : { }
+        },
+        "horton_flags" : {
+          "type" : "object",
+          "description" : "flags used by horton",
+          "properties" : { }
+        },
+        "attributes" : {
+          "type" : "object",
+          "description" : "Message attributes",
+          "properties" : { }
+        }
+      },
       "description" : "body for an invoming or outgoing event or message"
     },
     "roundtripMethodCallBody" : {
