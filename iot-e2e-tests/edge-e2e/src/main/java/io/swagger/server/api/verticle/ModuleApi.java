@@ -84,6 +84,6 @@ public interface ModuleApi  {
     void moduleWaitForDesiredPropertiesPatch(String connectionId, Handler<AsyncResult<Object>> handler);
 
     //Module_WaitForInputMessage
-    void moduleWaitForInputMessage(String connectionId, String inputName, Handler<AsyncResult<Object>> handler);
+    void moduleWaitForInputMessage(String connectionId, String inputName, Handler<AsyncResult<EventBody>> handler);
 
 }

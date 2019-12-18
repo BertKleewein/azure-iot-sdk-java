@@ -62,7 +62,7 @@ public interface DeviceApi  {
     void deviceSendEvent(String connectionId, EventBody eventBody, Handler<AsyncResult<Void>> handler);
 
     //Device_WaitForC2dMessage
-    void deviceWaitForC2dMessage(String connectionId, Handler<AsyncResult<Object>> handler);
+    void deviceWaitForC2dMessage(String connectionId, Handler<AsyncResult<EventBody>> handler);
 
     //Device_WaitForConnectionStatusChange
     void deviceWaitForConnectionStatusChange(String connectionId, Handler<AsyncResult<String>> handler);

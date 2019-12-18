@@ -786,7 +786,7 @@
           "200" : {
             "description" : "OK",
             "schema" : {
-              "type" : "object"
+              "$ref" : "#/definitions/eventBody"
             }
           }
         },
@@ -1459,7 +1459,7 @@
           "200" : {
             "description" : "OK",
             "schema" : {
-              "type" : "object"
+              "$ref" : "#/definitions/eventBody"
             }
           }
         },
