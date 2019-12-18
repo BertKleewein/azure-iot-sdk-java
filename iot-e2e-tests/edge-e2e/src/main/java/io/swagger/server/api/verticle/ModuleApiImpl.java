@@ -184,7 +184,7 @@ public class ModuleApiImpl implements ModuleApi
 
     //Module_WaitForInputMessage
     @Override
-    public void moduleWaitForInputMessage(String connectionId, String inputName, Handler<AsyncResult<Object>> handler)
+    public void moduleWaitForInputMessage(String connectionId, String inputName, Handler<AsyncResult<EventBody>> handler)
     {
         this._moduleGlue.waitForInputMessage(connectionId, inputName, handler);
     }

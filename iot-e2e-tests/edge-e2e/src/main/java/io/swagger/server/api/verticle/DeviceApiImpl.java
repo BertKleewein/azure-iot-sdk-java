@@ -131,7 +131,7 @@ public class DeviceApiImpl implements DeviceApi
 
     //Device_WaitForC2dMessage
     @Override
-    public void deviceWaitForC2dMessage(String connectionId, Handler<AsyncResult<Object>> handler)
+    public void deviceWaitForC2dMessage(String connectionId, Handler<AsyncResult<EventBody>> handler)
     {
         throw new java.lang.UnsupportedOperationException("Not supported yet");
     }

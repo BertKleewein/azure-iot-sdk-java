@@ -403,16 +403,16 @@ public class ModuleGlue
     {
         System.out.printf("moduleConnectionIdEventPut called for %s%n", connectionId);
         System.out.println(eventBody);
-        this.sendEventHelper(connectionId, new Message(eventBody.toString()), handler);
+        this.sendEventHelper(connectionId, new Message(Json.encode(eventBody.getBody())), handler);
     }
 
     protected static class MessageCallback implements com.microsoft.azure.sdk.iot.device.MessageCallback
     {
         ModuleClient _client;
-        Handler<AsyncResult<Object>> _handler;
+        Handler<AsyncResult<EventBody>> _handler;
         String _inputName;
 
-        public MessageCallback(ModuleClient client, String inputName, Handler<AsyncResult<Object>> handler)
+        public MessageCallback(ModuleClient client, String inputName, Handler<AsyncResult<EventBody>> handler)
         {
             this._client = client;
             this._inputName = inputName;
@@ -427,13 +427,13 @@ public class ModuleGlue
             System.out.printf("result = %s%n", result);
             if (this._handler != null)
             {
-                this._handler.handle(Future.succeededFuture(new JsonObject(result)));
+                this._handler.handle(Future.succeededFuture(new EventBody(new JsonObject(result),new JsonObject(), new JsonObject())));
             }
             return IotHubMessageResult.COMPLETE;
         }
     }
 
-    public void waitForInputMessage(String connectionId, String inputName, Handler<AsyncResult<Object>> handler)
+    public void waitForInputMessage(String connectionId, String inputName, Handler<AsyncResult<EventBody>> handler)
     {
         System.out.printf("waitForInputMessage with %s, %s%n", connectionId, inputName);
 
@@ -584,11 +584,11 @@ public class ModuleGlue
         }
     }
 
-    public void sendOutputEvent(String connectionId, String outputName, Object eventBody, Handler<AsyncResult<Void>> handler)
+    public void sendOutputEvent(String connectionId, String outputName, EventBody eventBody, Handler<AsyncResult<Void>> handler)
     {
         System.out.printf("sendOutputEvent called for %s, %s%n", connectionId, outputName);
         System.out.println(eventBody);
-        Message msg = new Message(Json.encode(eventBody));
+        Message msg = new Message(Json.encode(eventBody.getBody()));
         msg.setOutputName(outputName);
         this.sendEventHelper(connectionId, msg, handler);
     }
