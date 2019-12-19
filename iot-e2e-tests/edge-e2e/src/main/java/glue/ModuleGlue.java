@@ -147,7 +147,7 @@ public class ModuleGlue
         }
         else
         {
-            MethodRequest request = new MethodRequest(methodInvokeParameters.getMethodName(), methodInvokeParameters.getPayload().toString(), methodInvokeParameters.getResponseTimeoutInSeconds(), methodInvokeParameters.getConnectTimeoutInSeconds());
+            MethodRequest request = new MethodRequest(methodInvokeParameters.getMethodName(), Json.encode(methodInvokeParameters.getPayload()), methodInvokeParameters.getResponseTimeoutInSeconds(), methodInvokeParameters.getConnectTimeoutInSeconds());
             try
             {
                 MethodResult result = client.invokeMethod(deviceId, request);
@@ -427,7 +427,7 @@ public class ModuleGlue
             System.out.printf("result = %s%n", result);
             if (this._handler != null)
             {
-                this._handler.handle(Future.succeededFuture(new EventBody(new JsonObject(result),new JsonObject(), new JsonObject())));
+                this._handler.handle(Future.succeededFuture(new EventBody(new JsonObject(result), new JsonObject(), new JsonObject())));
             }
             return IotHubMessageResult.COMPLETE;
         }
@@ -471,20 +471,11 @@ public class ModuleGlue
             System.out.printf("method %s called%n", methodName);
             if (methodName.equals(this._methodName))
             {
-                String methodDataString;
-                try
-                {
-                    methodDataString = Json.mapper.readValue(new String((byte[]) methodData), String.class);
-                } catch (IOException e)
-                {
-                    this._handler.handle(Future.failedFuture(e));
-                    this.reset();
-                    return new DeviceMethodData(500, "exception parsing methodData");
-                }
+                String methodDataString = new String((byte[]) methodData);
                 System.out.printf("methodData: %s%n", methodDataString);
 
                 if (methodDataString.equals(this._requestBody) ||
-                    Json.encode(methodDataString).equals(this._requestBody))
+                        Json.encode(methodDataString).equals(this._requestBody))
                 {
                     System.out.printf("Method data looks correct.  Returning result: %s%n", _responseBody);
                     this._handler.handle(Future.succeededFuture());
@@ -542,7 +533,7 @@ public class ModuleGlue
         else
         {
             _methodCallback._handler = handler;
-            _methodCallback._requestBody = (String) (((LinkedHashMap) requestAndResponse.getRequestPayload()).get("payload"));
+            _methodCallback._requestBody  = Json.encode(((LinkedHashMap)requestAndResponse.getRequestPayload()).get("payload"));
             _methodCallback._responseBody = Json.encode(requestAndResponse.getResponsePayload());
             _methodCallback._statusCode = requestAndResponse.getStatusCode();
             _methodCallback._client = client;
@@ -572,7 +563,7 @@ public class ModuleGlue
         }
         else
         {
-            MethodRequest request = new MethodRequest(methodInvokeParameters.getMethodName(), methodInvokeParameters.getPayload().toString(), methodInvokeParameters.getResponseTimeoutInSeconds(), methodInvokeParameters.getConnectTimeoutInSeconds());
+            MethodRequest request = new MethodRequest(methodInvokeParameters.getMethodName(), Json.encode(methodInvokeParameters.getPayload()), methodInvokeParameters.getResponseTimeoutInSeconds(), methodInvokeParameters.getConnectTimeoutInSeconds());
             try
             {
                 MethodResult result = client.invokeMethod(deviceId, moduleId, request);

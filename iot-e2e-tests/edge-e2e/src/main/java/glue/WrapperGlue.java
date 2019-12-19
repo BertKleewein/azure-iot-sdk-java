@@ -24,4 +24,13 @@ public class WrapperGlue
         System.out.println(logMessage.getMessage());
         handler.handle(Future.succeededFuture());
     }
+
+    public void getCapabilities(Handler<AsyncResult<Object>> handler)
+    {
+        JsonObject caps = new JsonObject("{"+
+                "\"flags\": {},"+
+                "\"skip_list\": [\"module_under_test_has_device_wrapper\"]" +
+                "}");
+        handler.handle(Future.succeededFuture(caps));
+    }
 }

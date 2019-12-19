@@ -31,7 +31,7 @@ public class WrapperApiImpl implements WrapperApi
     @Override
     public void wrapperGetCapabilities(Handler<AsyncResult<Object>> handler)
     {
-        throw new java.lang.UnsupportedOperationException("Not supported yet");
+        _wrapperGlue.getCapabilities(handler);
     }
 
     //Wrapper_LogMessage

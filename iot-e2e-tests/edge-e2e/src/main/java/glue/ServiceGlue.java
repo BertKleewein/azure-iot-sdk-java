@@ -5,9 +5,11 @@ import com.microsoft.azure.sdk.iot.service.devicetwin.MethodResult;
 import com.microsoft.azure.sdk.iot.service.exceptions.IotHubException;
 import io.swagger.server.api.MainApiException;
 import io.swagger.server.api.model.ConnectResponse;
+import io.swagger.server.api.model.MethodInvoke;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
+import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
 
 import java.io.IOException;
@@ -69,7 +71,7 @@ public class ServiceGlue
         handler.handle(Future.succeededFuture());
     }
 
-    private void invokeMethodCommon(String connectionId, String deviceId, String moduleId, Object methodInvokeParameters, Handler<AsyncResult<Object>> handler)
+    private void invokeMethodCommon(String connectionId, String deviceId, String moduleId, MethodInvoke methodInvokeParameters, Handler<AsyncResult<Object>> handler)
     {
         System.out.printf("invoking method on %s with deviceId = %s moduleId = %s%n", connectionId, deviceId, moduleId);
         System.out.println(methodInvokeParameters);
@@ -81,11 +83,10 @@ public class ServiceGlue
         }
         else
         {
-            JsonObject params = (JsonObject) methodInvokeParameters;
-            String methodName = params.getString("methodName");
-            String payload = params.getString("payload");
-            Long responseTimeout = params.getLong("responseTimeoutInSeconds", 0L);
-            Long connectionTimeout = params.getLong("connectTimeoutInSeconds", 0L);
+            String methodName = methodInvokeParameters.getMethodName();
+            Object payload = methodInvokeParameters.getPayload();
+            Long responseTimeout = new Long(methodInvokeParameters.getResponseTimeoutInSeconds());
+            Long connectionTimeout = new Long(methodInvokeParameters.getConnectTimeoutInSeconds());
             MethodResult result = null;
             System.out.printf("invoking%n");
             try
@@ -112,13 +113,13 @@ public class ServiceGlue
         }
     }
 
-    public void invokeDeviceMethod(String connectionId, String deviceId, Object methodInvokeParameters, Handler<AsyncResult<Object>> handler)
+    public void invokeDeviceMethod(String connectionId, String deviceId, MethodInvoke methodInvokeParameters, Handler<AsyncResult<Object>> handler)
     {
         invokeMethodCommon(connectionId, deviceId, null, methodInvokeParameters, handler);
 
     }
 
-    public void invokeModuleMethod(String connectionId, String deviceId, String moduleId, Object methodInvokeParameters, Handler<AsyncResult<Object>> handler)
+    public void invokeModuleMethod(String connectionId, String deviceId, String moduleId, MethodInvoke methodInvokeParameters, Handler<AsyncResult<Object>> handler)
     {
         invokeMethodCommon(connectionId, deviceId, moduleId, methodInvokeParameters, handler);
     }
