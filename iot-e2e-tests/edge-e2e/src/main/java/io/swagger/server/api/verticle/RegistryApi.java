@@ -2,6 +2,7 @@ package io.swagger.server.api.verticle;
 
 import io.swagger.server.api.model.ConnectResponse;
 import io.swagger.server.api.MainApiException;
+import io.swagger.server.api.model.Twin;
 
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
@@ -17,15 +18,15 @@ public interface RegistryApi  {
     void registryDisconnect(String connectionId, Handler<AsyncResult<Void>> handler);
 
     //Registry_GetDeviceTwin
-    void registryGetDeviceTwin(String connectionId, String deviceId, Handler<AsyncResult<Object>> handler);
+    void registryGetDeviceTwin(String connectionId, String deviceId, Handler<AsyncResult<Twin>> handler);
 
     //Registry_GetModuleTwin
-    void registryGetModuleTwin(String connectionId, String deviceId, String moduleId, Handler<AsyncResult<Object>> handler);
+    void registryGetModuleTwin(String connectionId, String deviceId, String moduleId, Handler<AsyncResult<Twin>> handler);
 
     //Registry_PatchDeviceTwin
-    void registryPatchDeviceTwin(String connectionId, String deviceId, Object props, Handler<AsyncResult<Void>> handler);
+    void registryPatchDeviceTwin(String connectionId, String deviceId, Twin twin, Handler<AsyncResult<Void>> handler);
 
     //Registry_PatchModuleTwin
-    void registryPatchModuleTwin(String connectionId, String deviceId, String moduleId, Object props, Handler<AsyncResult<Void>> handler);
+    void registryPatchModuleTwin(String connectionId, String deviceId, String moduleId, Twin twin, Handler<AsyncResult<Void>> handler);
 
 }

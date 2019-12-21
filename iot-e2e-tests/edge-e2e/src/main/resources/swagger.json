@@ -197,7 +197,7 @@
           "200" : {
             "description" : "OK",
             "schema" : {
-              "type" : "object"
+              "$ref" : "#/definitions/twin"
             }
           }
         },
@@ -226,10 +226,10 @@
           "type" : "string"
         }, {
           "in" : "body",
-          "name" : "props",
+          "name" : "twin",
           "required" : true,
           "schema" : {
-            "type" : "object"
+            "$ref" : "#/definitions/twin"
           }
         } ],
         "responses" : {
@@ -263,7 +263,7 @@
           "200" : {
             "description" : "OK",
             "schema" : {
-              "type" : "object"
+              "$ref" : "#/definitions/twin"
             }
           }
         },
@@ -287,10 +287,10 @@
           "type" : "string"
         }, {
           "in" : "body",
-          "name" : "props",
+          "name" : "twin",
           "required" : true,
           "schema" : {
-            "type" : "object"
+            "$ref" : "#/definitions/twin"
           }
         } ],
         "responses" : {
@@ -643,7 +643,7 @@
           "200" : {
             "description" : "OK",
             "schema" : {
-              "type" : "object"
+              "$ref" : "#/definitions/twin"
             }
           }
         },
@@ -662,10 +662,10 @@
           "type" : "string"
         }, {
           "in" : "body",
-          "name" : "props",
+          "name" : "twin",
           "required" : true,
           "schema" : {
-            "type" : "object"
+            "$ref" : "#/definitions/twin"
           }
         } ],
         "responses" : {
@@ -694,7 +694,7 @@
           "200" : {
             "description" : "OK",
             "schema" : {
-              "type" : "object"
+              "$ref" : "#/definitions/twin"
             }
           }
         },
@@ -1503,7 +1503,7 @@
           "200" : {
             "description" : "OK",
             "schema" : {
-              "type" : "object"
+              "$ref" : "#/definitions/twin"
             }
           }
         },
@@ -1522,10 +1522,10 @@
           "type" : "string"
         }, {
           "in" : "body",
-          "name" : "props",
+          "name" : "twin",
           "required" : true,
           "schema" : {
-            "type" : "object"
+            "$ref" : "#/definitions/twin"
           }
         } ],
         "responses" : {
@@ -1554,7 +1554,7 @@
           "200" : {
             "description" : "OK",
             "schema" : {
-              "type" : "object"
+              "$ref" : "#/definitions/twin"
             }
           }
         },
@@ -1733,6 +1733,22 @@
         }
       },
       "description" : "result of a connection to a service, device, or module client"
+    },
+    "twin" : {
+      "type" : "object",
+      "properties" : {
+        "desired" : {
+          "type" : "object",
+          "description" : "desired properties",
+          "properties" : { }
+        },
+        "reported" : {
+          "type" : "object",
+          "description" : "reported properties",
+          "properties" : { }
+        }
+      },
+      "description" : "device twin or module twin"
     },
     "certificate" : {
       "type" : "object",

@@ -10,6 +10,7 @@ import io.vertx.core.logging.LoggerFactory;
 
 import io.swagger.server.api.model.ConnectResponse;
 import io.swagger.server.api.MainApiException;
+import io.swagger.server.api.model.Twin;
 
 import java.util.List;
 import java.util.Map;
@@ -174,13 +175,13 @@ public class RegistryApiVerticle extends AbstractVerticle {
                     return;
                 }
                 String deviceId = deviceIdParam;
-                String propsParam = message.body().getString("props");
-                if(propsParam == null) {
-                    manageError(message, new MainApiException(400, "props is required"), serviceId);
+                JsonObject twinParam = message.body().getJsonObject("twin");
+                if (twinParam == null) {
+                    manageError(message, new MainApiException(400, "twin is required"), serviceId);
                     return;
                 }
-                Object props = Json.mapper.readValue(propsParam, Object.class);
-                service.registryPatchDeviceTwin(connectionId, deviceId, props, result -> {
+                Twin twin = Json.mapper.readValue(twinParam.encode(), Twin.class);
+                service.registryPatchDeviceTwin(connectionId, deviceId, twin, result -> {
                     if (result.succeeded())
                         message.reply(null);
                     else {
@@ -217,13 +218,13 @@ public class RegistryApiVerticle extends AbstractVerticle {
                     return;
                 }
                 String moduleId = moduleIdParam;
-                String propsParam = message.body().getString("props");
-                if(propsParam == null) {
-                    manageError(message, new MainApiException(400, "props is required"), serviceId);
+                JsonObject twinParam = message.body().getJsonObject("twin");
+                if (twinParam == null) {
+                    manageError(message, new MainApiException(400, "twin is required"), serviceId);
                     return;
                 }
-                Object props = Json.mapper.readValue(propsParam, Object.class);
-                service.registryPatchModuleTwin(connectionId, deviceId, moduleId, props, result -> {
+                Twin twin = Json.mapper.readValue(twinParam.encode(), Twin.class);
+                service.registryPatchModuleTwin(connectionId, deviceId, moduleId, twin, result -> {
                     if (result.succeeded())
                         message.reply(null);
                     else {

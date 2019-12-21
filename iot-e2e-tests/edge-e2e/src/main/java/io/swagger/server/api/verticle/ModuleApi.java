@@ -6,6 +6,7 @@ import io.swagger.server.api.model.EventBody;
 import io.swagger.server.api.MainApiException;
 import io.swagger.server.api.model.MethodInvoke;
 import io.swagger.server.api.model.RoundtripMethodCallBody;
+import io.swagger.server.api.model.Twin;
 
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
@@ -54,7 +55,7 @@ public interface ModuleApi  {
     void moduleGetConnectionStatus(String connectionId, Handler<AsyncResult<String>> handler);
 
     //Module_GetTwin
-    void moduleGetTwin(String connectionId, Handler<AsyncResult<Object>> handler);
+    void moduleGetTwin(String connectionId, Handler<AsyncResult<Twin>> handler);
 
     //Module_InvokeDeviceMethod
     void moduleInvokeDeviceMethod(String connectionId, String deviceId, MethodInvoke methodInvokeParameters, Handler<AsyncResult<Object>> handler);
@@ -63,7 +64,7 @@ public interface ModuleApi  {
     void moduleInvokeModuleMethod(String connectionId, String deviceId, String moduleId, MethodInvoke methodInvokeParameters, Handler<AsyncResult<Object>> handler);
 
     //Module_PatchTwin
-    void modulePatchTwin(String connectionId, Object props, Handler<AsyncResult<Void>> handler);
+    void modulePatchTwin(String connectionId, Twin twin, Handler<AsyncResult<Void>> handler);
 
     //Module_Reconnect
     void moduleReconnect(String connectionId, Boolean forceRenewPassword, Handler<AsyncResult<Void>> handler);
@@ -81,7 +82,7 @@ public interface ModuleApi  {
     void moduleWaitForConnectionStatusChange(String connectionId, Handler<AsyncResult<String>> handler);
 
     //Module_WaitForDesiredPropertiesPatch
-    void moduleWaitForDesiredPropertiesPatch(String connectionId, Handler<AsyncResult<Object>> handler);
+    void moduleWaitForDesiredPropertiesPatch(String connectionId, Handler<AsyncResult<Twin>> handler);
 
     //Module_WaitForInputMessage
     void moduleWaitForInputMessage(String connectionId, String inputName, Handler<AsyncResult<EventBody>> handler);

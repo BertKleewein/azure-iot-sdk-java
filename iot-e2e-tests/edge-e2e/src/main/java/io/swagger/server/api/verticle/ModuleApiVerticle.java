@@ -14,6 +14,7 @@ import io.swagger.server.api.model.EventBody;
 import io.swagger.server.api.MainApiException;
 import io.swagger.server.api.model.MethodInvoke;
 import io.swagger.server.api.model.RoundtripMethodCallBody;
+import io.swagger.server.api.model.Twin;
 
 import java.util.List;
 import java.util.Map;
@@ -532,13 +533,13 @@ public class ModuleApiVerticle extends AbstractVerticle {
                     return;
                 }
                 String connectionId = connectionIdParam;
-                String propsParam = message.body().getString("props");
-                if(propsParam == null) {
-                    manageError(message, new MainApiException(400, "props is required"), serviceId);
+                JsonObject twinParam = message.body().getJsonObject("twin");
+                if (twinParam == null) {
+                    manageError(message, new MainApiException(400, "twin is required"), serviceId);
                     return;
                 }
-                Object props = Json.mapper.readValue(propsParam, Object.class);
-                service.modulePatchTwin(connectionId, props, result -> {
+                Twin twin = Json.mapper.readValue(twinParam.encode(), Twin.class);
+                service.modulePatchTwin(connectionId, twin, result -> {
                     if (result.succeeded())
                         message.reply(null);
                     else {

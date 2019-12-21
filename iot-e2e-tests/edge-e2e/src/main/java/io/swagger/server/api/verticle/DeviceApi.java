@@ -5,6 +5,7 @@ import io.swagger.server.api.model.ConnectResponse;
 import io.swagger.server.api.model.EventBody;
 import io.swagger.server.api.MainApiException;
 import io.swagger.server.api.model.RoundtripMethodCallBody;
+import io.swagger.server.api.model.Twin;
 
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
@@ -47,10 +48,10 @@ public interface DeviceApi  {
     void deviceGetConnectionStatus(String connectionId, Handler<AsyncResult<String>> handler);
 
     //Device_GetTwin
-    void deviceGetTwin(String connectionId, Handler<AsyncResult<Object>> handler);
+    void deviceGetTwin(String connectionId, Handler<AsyncResult<Twin>> handler);
 
     //Device_PatchTwin
-    void devicePatchTwin(String connectionId, Object props, Handler<AsyncResult<Void>> handler);
+    void devicePatchTwin(String connectionId, Twin twin, Handler<AsyncResult<Void>> handler);
 
     //Device_Reconnect
     void deviceReconnect(String connectionId, Boolean forceRenewPassword, Handler<AsyncResult<Void>> handler);
@@ -68,6 +69,6 @@ public interface DeviceApi  {
     void deviceWaitForConnectionStatusChange(String connectionId, Handler<AsyncResult<String>> handler);
 
     //Device_WaitForDesiredPropertiesPatch
-    void deviceWaitForDesiredPropertiesPatch(String connectionId, Handler<AsyncResult<Object>> handler);
+    void deviceWaitForDesiredPropertiesPatch(String connectionId, Handler<AsyncResult<Twin>> handler);
 
 }
