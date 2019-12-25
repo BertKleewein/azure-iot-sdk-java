@@ -6,6 +6,7 @@ import glue.RegistryGlue;
 import io.swagger.server.api.model.ConnectResponse;
 import io.swagger.server.api.MainApiException;
 
+import io.swagger.server.api.model.Twin;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 
@@ -36,29 +37,29 @@ public class RegistryApiImpl implements RegistryApi
 
     //Registry_GetDeviceTwin
     @Override
-    public void registryGetDeviceTwin(String connectionId, String deviceId, Handler<AsyncResult<Object>> handler)
+    public void registryGetDeviceTwin(String connectionId, String deviceId, Handler<AsyncResult<Twin>> handler)
     {
         throw new java.lang.UnsupportedOperationException("Not supported yet");
     }
 
     //Registry_GetModuleTwin
-    public void registryGetModuleTwin(String connectionId, String deviceId, String moduleId, Handler<AsyncResult<Object>> handler)
+    public void registryGetModuleTwin(String connectionId, String deviceId, String moduleId, Handler<AsyncResult<Twin>> handler)
     {
         this._registryGlue.getModuleTwin(connectionId, deviceId, moduleId, handler);
     }
 
     //Registry_PatchDeviceTwin
     @Override
-    public void registryPatchDeviceTwin(String connectionId, String deviceId, Object props, Handler<AsyncResult<Void>> handler)
+    public void registryPatchDeviceTwin(String connectionId, String deviceId, Twin twin, Handler<AsyncResult<Void>> handler)
     {
         throw new java.lang.UnsupportedOperationException("Not supported yet");
     }
 
     //Registry_PatchModuleTwin
     @Override
-    public void registryPatchModuleTwin(String connectionId, String deviceId, String moduleId, Object props, Handler<AsyncResult<Void>> handler)
+    public void registryPatchModuleTwin(String connectionId, String deviceId, String moduleId, Twin twin, Handler<AsyncResult<Void>> handler)
     {
-        this._registryGlue.sendModuleTwinPatch(connectionId, deviceId, moduleId, props, handler);
+        this._registryGlue.sendModuleTwinPatch(connectionId, deviceId, moduleId, twin, handler);
     }
 
 }

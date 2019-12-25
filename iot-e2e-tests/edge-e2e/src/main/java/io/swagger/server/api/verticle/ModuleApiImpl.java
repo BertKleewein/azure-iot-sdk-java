@@ -114,7 +114,7 @@ public class ModuleApiImpl implements ModuleApi
 
     //Module_GetTwin
     @Override
-    public void moduleGetTwin(String connectionId, Handler<AsyncResult<Object>> handler)
+    public void moduleGetTwin(String connectionId, Handler<AsyncResult<Twin>> handler)
     {
         this._moduleGlue.getTwin(connectionId, handler);
     }
@@ -135,9 +135,9 @@ public class ModuleApiImpl implements ModuleApi
 
     //Module_PatchTwin
     @Override
-    public void modulePatchTwin(String connectionId, Object props, Handler<AsyncResult<Void>> handler)
+    public void modulePatchTwin(String connectionId, Twin twin, Handler<AsyncResult<Void>> handler)
     {
-        this._moduleGlue.sendTwinPatch(connectionId, props, handler);
+        this._moduleGlue.sendTwinPatch(connectionId, twin, handler);
     }
 
     //Module_Reconnect
@@ -177,7 +177,7 @@ public class ModuleApiImpl implements ModuleApi
 
     //Module_WaitForDesiredPropertiesPatch
     @Override
-    public void moduleWaitForDesiredPropertiesPatch(String connectionId, Handler<AsyncResult<Object>> handler)
+    public void moduleWaitForDesiredPropertiesPatch(String connectionId, Handler<AsyncResult<Twin>> handler)
     {
         this._moduleGlue.waitForDesiredPropertyPatch(connectionId, handler);
     }

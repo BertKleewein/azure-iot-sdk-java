@@ -201,25 +201,20 @@ public class ModuleGlue
 
     private static class ModuleTwinPropertyCallBack implements TwinPropertyCallBack
     {
-        private JsonObject _props = null;
-        private Handler<AsyncResult<Object>> _handler;
+        private Twin _twin = null;
+        private Handler<AsyncResult<Twin>> _handler;
         private Timer _timer = null;
 
-        public void setHandler(Handler<AsyncResult<Object>> handler)
+        public void setHandler(Handler<AsyncResult<Twin>> handler)
         {
             if (handler == null)
             {
-                this._props = null;
+                this._twin = null;
             }
             else
             {
-                this._props = new JsonObject()
-                {
-                    {
-                        put("desired", new JsonObject());
-                        put("reported", new JsonObject());
-                    }
-                };
+                this._twin = new Twin(new JsonObject(), new JsonObject());
+
             }
             this._handler = handler;
         }
@@ -232,7 +227,7 @@ public class ModuleGlue
                             " property " + property.getKey() +
                             " to " + property.getValue() +
                             ", Properties version:" + property.getVersion());
-            if (this._props == null)
+            if (this._twin == null)
             {
                 System.out.println("nobody is listening for desired properties.  ignoring.");
             }
@@ -240,13 +235,13 @@ public class ModuleGlue
             {
                 if (property.getIsReported())
                 {
-                    this._props.getJsonObject("reported").getMap().put(property.getKey(), property.getValue());
+                    ((JsonObject) this._twin.getReported()).getMap().put(property.getKey(), property.getValue());
                 }
                 else
                 {
-                    this._props.getJsonObject("desired").getMap().put(property.getKey(), property.getValue());
+                    ((JsonObject) this._twin.getDesired()).getMap().put(property.getKey(), property.getValue());
                 }
-                System.out.println(this._props.toString());
+                System.out.println(this._twin.toString());
                 System.out.println("scheduling timer");
                 this.rescheduleHandler();
             }
@@ -271,17 +266,11 @@ public class ModuleGlue
                 public void run()
                 {
                     _timer = null;
-                    if (_handler != null && _props != null)
+                    if (_handler != null && _twin != null)
                     {
                         System.out.println("It's been 2 seconds since last desired property arrived.  Calling handler");
-                        JsonObject twin = new JsonObject()
-                        {
-                            {
-                                put("properties", _props);
-                            }
-                        };
-                        System.out.println(twin.toString());
-                        _handler.handle(Future.succeededFuture(twin));
+                        System.out.println(_twin.toString());
+                        _handler.handle(Future.succeededFuture(_twin));
                         _handler = null;
                     }
                 }
@@ -533,7 +522,7 @@ public class ModuleGlue
         else
         {
             _methodCallback._handler = handler;
-            _methodCallback._requestBody  = Json.encode(((LinkedHashMap)requestAndResponse.getRequestPayload()).get("payload"));
+            _methodCallback._requestBody = Json.encode(((LinkedHashMap) requestAndResponse.getRequestPayload()).get("payload"));
             _methodCallback._responseBody = Json.encode(requestAndResponse.getResponsePayload());
             _methodCallback._statusCode = requestAndResponse.getStatusCode();
             _methodCallback._client = client;
@@ -584,7 +573,7 @@ public class ModuleGlue
         this.sendEventHelper(connectionId, msg, handler);
     }
 
-    public void waitForDesiredPropertyPatch(String connectionId, Handler<AsyncResult<Object>> handler)
+    public void waitForDesiredPropertyPatch(String connectionId, Handler<AsyncResult<Twin>> handler)
     {
         System.out.printf("waitForDesiredPropertyPatch with %s%n", connectionId);
 
@@ -598,9 +587,7 @@ public class ModuleGlue
             this._deviceTwinPropertyCallback.setHandler(res -> {
                 if (res.succeeded())
                 {
-                    JsonObject obj = (JsonObject) res.result();
-                    Object desiredProps = obj.getJsonObject("properties").getJsonObject("desired");
-                    handler.handle(Future.succeededFuture(desiredProps));
+                    handler.handle(Future.succeededFuture(res.result()));
                 }
                 else
                 {
@@ -611,7 +598,7 @@ public class ModuleGlue
         }
     }
 
-    public void getTwin(String connectionId, Handler<AsyncResult<Object>> handler)
+    public void getTwin(String connectionId, Handler<AsyncResult<Twin>> handler)
     {
         System.out.printf("getTwin with %s%n", connectionId);
 
@@ -634,21 +621,21 @@ public class ModuleGlue
         }
     }
 
-    private Set<Property> objectToPropSet(JsonObject props)
+    private Set<Property> objectToPropSet(LinkedHashMap<String, Object> props)
     {
         Set<Property> propSet = new HashSet<Property>();
-        for (String key : props.fieldNames())
+        for (String key : props.keySet())
         {
             // TODO: we may need to make this function recursive.
-            propSet.add(new Property(key, props.getMap().get(key)));
+            propSet.add(new Property(key, props.get(key)));
         }
         return propSet;
     }
 
-    public void sendTwinPatch(String connectionId, Object props, Handler<AsyncResult<Void>> handler)
+    public void sendTwinPatch(String connectionId, Twin twin, Handler<AsyncResult<Void>> handler)
     {
         System.out.printf("sendTwinPatch called for %s%n", connectionId);
-        System.out.println(props.toString());
+        System.out.println(twin.toString());
 
         ModuleClient client = getClient(connectionId);
         if (client == null)
@@ -657,7 +644,7 @@ public class ModuleGlue
         }
         else
         {
-            Set<Property> propSet = objectToPropSet((JsonObject) props);
+            Set<Property> propSet = objectToPropSet((LinkedHashMap<String, Object>)twin.getReported());
             this._deviceTwinStatusCallback.setHandler(handler);
             try
             {

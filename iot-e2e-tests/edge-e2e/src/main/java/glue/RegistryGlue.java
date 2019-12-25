@@ -1,11 +1,13 @@
 package glue;
 
+import com.microsoft.azure.sdk.iot.deps.twin.TwinCollection;
 import com.microsoft.azure.sdk.iot.service.devicetwin.DeviceTwin;
 import com.microsoft.azure.sdk.iot.service.devicetwin.DeviceTwinDevice;
 import com.microsoft.azure.sdk.iot.service.devicetwin.Pair;
 import com.microsoft.azure.sdk.iot.service.exceptions.IotHubException;
 import io.swagger.server.api.MainApiException;
 import io.swagger.server.api.model.ConnectResponse;
+import io.swagger.server.api.model.Twin;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
@@ -70,7 +72,7 @@ public class RegistryGlue
         handler.handle(Future.succeededFuture());
     }
 
-    public void getModuleTwin(String connectionId, String deviceId, String moduleId, Handler<AsyncResult<Object>> handler)
+    public void getModuleTwin(String connectionId, String deviceId, String moduleId, Handler<AsyncResult<Twin>> handler)
     {
         System.out.printf("getModuleTwin called for %s with deviceId = %s and moduleId = %s%n", connectionId, deviceId, moduleId);
 
@@ -81,7 +83,7 @@ public class RegistryGlue
         }
         else
         {
-            WrappedDeviceTwinDevice twin = new WrappedDeviceTwinDevice(deviceId, moduleId);
+            DeviceTwinDevice twin = new DeviceTwinDevice(deviceId, moduleId);
             try
             {
                 client.getTwin(twin);
@@ -89,14 +91,15 @@ public class RegistryGlue
             {
                 handler.handle(Future.failedFuture(e));
             }
-            handler.handle(Future.succeededFuture(twin.toJsonObject()));
+            Twin hortonTwin = new Twin(twin.getDesiredProperties(), twin.getReportedProperties());
+            handler.handle(Future.succeededFuture(hortonTwin));
         }
     }
 
-    public void sendModuleTwinPatch(String connectionId, String deviceId, String moduleId, Object props, Handler<AsyncResult<Void>> handler)
+    public void sendModuleTwinPatch(String connectionId, String deviceId, String moduleId, Twin twin, Handler<AsyncResult<Void>> handler)
     {
         System.out.printf("sendModuleTwinPatch called for %s with deviceId = %s and moduleId = %s%n", connectionId, deviceId, moduleId);
-        System.out.println(props.toString());
+        System.out.println(twin.toString());
 
         DeviceTwin client = getClient(connectionId);
         if (client == null)
@@ -105,17 +108,18 @@ public class RegistryGlue
         }
         else
         {
-            DeviceTwinDevice twin = new DeviceTwinDevice(deviceId, moduleId);
+            DeviceTwinDevice serviceTwin = new DeviceTwinDevice(deviceId, moduleId);
+
             Set<Pair> newProps = new HashSet<Pair>();
-            Map<String, Object> desiredProps = ((JsonObject) props).getJsonObject("properties").getJsonObject("desired").getMap();
+            Map<String, Object> desiredProps = ((JsonObject)twin.getDesired()).getMap();
             for (String key : desiredProps.keySet())
             {
                 newProps.add(new Pair(key, desiredProps.get(key)));
             }
-            twin.setDesiredProperties(newProps);
+            serviceTwin.setDesiredProperties(newProps);
             try
             {
-                client.updateTwin(twin);
+                client.updateTwin(serviceTwin);
             }
             catch (IotHubException | IOException e)
             {

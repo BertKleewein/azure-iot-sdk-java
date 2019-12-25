@@ -1,10 +1,7 @@
 package io.swagger.server.api.verticle;
 
-import io.swagger.server.api.model.Certificate;
-import io.swagger.server.api.model.ConnectResponse;
+import io.swagger.server.api.model.*;
 import io.swagger.server.api.MainApiException;
-import io.swagger.server.api.model.EventBody;
-import io.swagger.server.api.model.RoundtripMethodCallBody;
 
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
@@ -96,14 +93,14 @@ public class DeviceApiImpl implements DeviceApi
 
     //Device_GetTwin
     @Override
-    public void deviceGetTwin(String connectionId, Handler<AsyncResult<Object>> handler)
+    public void deviceGetTwin(String connectionId, Handler<AsyncResult<Twin>> handler)
     {
         throw new java.lang.UnsupportedOperationException("Not supported yet");
     }
 
     //Device_PatchTwin
     @Override
-    public void devicePatchTwin(String connectionId, Object props, Handler<AsyncResult<Void>> handler)
+    public void devicePatchTwin(String connectionId, Twin twin, Handler<AsyncResult<Void>> handler)
     {
         throw new java.lang.UnsupportedOperationException("Not supported yet");
     }
@@ -145,7 +142,7 @@ public class DeviceApiImpl implements DeviceApi
 
     //Device_WaitForDesiredPropertiesPatch
     @Override
-    public void deviceWaitForDesiredPropertiesPatch(String connectionId, Handler<AsyncResult<Object>> handler)
+    public void deviceWaitForDesiredPropertiesPatch(String connectionId, Handler<AsyncResult<Twin>> handler)
     {
         throw new java.lang.UnsupportedOperationException("Not supported yet");
     }
