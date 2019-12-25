@@ -12,7 +12,7 @@ import io.swagger.server.api.model.Certificate;
 import io.swagger.server.api.model.ConnectResponse;
 import io.swagger.server.api.model.EventBody;
 import io.swagger.server.api.MainApiException;
-import io.swagger.server.api.model.RoundtripMethodCallBody;
+import io.swagger.server.api.model.MethodRequestAndResponse;
 import io.swagger.server.api.model.Twin;
 
 import java.util.List;
@@ -35,11 +35,11 @@ public class DeviceApiVerticle extends AbstractVerticle {
     final static String DEVICE_GETTWIN_SERVICE_ID = "Device_GetTwin";
     final static String DEVICE_PATCHTWIN_SERVICE_ID = "Device_PatchTwin";
     final static String DEVICE_RECONNECT_SERVICE_ID = "Device_Reconnect";
-    final static String DEVICE_ROUNDTRIPMETHODCALL_SERVICE_ID = "Device_RoundtripMethodCall";
     final static String DEVICE_SENDEVENT_SERVICE_ID = "Device_SendEvent";
     final static String DEVICE_WAITFORC2DMESSAGE_SERVICE_ID = "Device_WaitForC2dMessage";
     final static String DEVICE_WAITFORCONNECTIONSTATUSCHANGE_SERVICE_ID = "Device_WaitForConnectionStatusChange";
     final static String DEVICE_WAITFORDESIREDPROPERTIESPATCH_SERVICE_ID = "Device_WaitForDesiredPropertiesPatch";
+    final static String DEVICE_WAITFORMETHODANDRETURNRESPONSE_SERVICE_ID = "Device_WaitForMethodAndReturnResponse";
 
     final DeviceApi service;
 
@@ -444,43 +444,6 @@ public class DeviceApiVerticle extends AbstractVerticle {
             }
         });
 
-        //Consumer for Device_RoundtripMethodCall
-        vertx.eventBus().<JsonObject> consumer(DEVICE_ROUNDTRIPMETHODCALL_SERVICE_ID).handler(message -> {
-            try {
-                // Workaround for #allParams section clearing the vendorExtensions map
-                String serviceId = "Device_RoundtripMethodCall";
-                String connectionIdParam = message.body().getString("connectionId");
-                if(connectionIdParam == null) {
-                    manageError(message, new MainApiException(400, "connectionId is required"), serviceId);
-                    return;
-                }
-                String connectionId = connectionIdParam;
-                String methodNameParam = message.body().getString("methodName");
-                if(methodNameParam == null) {
-                    manageError(message, new MainApiException(400, "methodName is required"), serviceId);
-                    return;
-                }
-                String methodName = methodNameParam;
-                JsonObject requestAndResponseParam = message.body().getJsonObject("requestAndResponse");
-                if (requestAndResponseParam == null) {
-                    manageError(message, new MainApiException(400, "requestAndResponse is required"), serviceId);
-                    return;
-                }
-                RoundtripMethodCallBody requestAndResponse = Json.mapper.readValue(requestAndResponseParam.encode(), RoundtripMethodCallBody.class);
-                service.deviceRoundtripMethodCall(connectionId, methodName, requestAndResponse, result -> {
-                    if (result.succeeded())
-                        message.reply(null);
-                    else {
-                        Throwable cause = result.cause();
-                        manageError(message, cause, "Device_RoundtripMethodCall");
-                    }
-                });
-            } catch (Exception e) {
-                logUnexpectedError("Device_RoundtripMethodCall", e);
-                message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
-            }
-        });
-
         //Consumer for Device_SendEvent
         vertx.eventBus().<JsonObject> consumer(DEVICE_SENDEVENT_SERVICE_ID).handler(message -> {
             try {
@@ -583,6 +546,43 @@ public class DeviceApiVerticle extends AbstractVerticle {
                 });
             } catch (Exception e) {
                 logUnexpectedError("Device_WaitForDesiredPropertiesPatch", e);
+                message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
+            }
+        });
+
+        //Consumer for Device_WaitForMethodAndReturnResponse
+        vertx.eventBus().<JsonObject> consumer(DEVICE_WAITFORMETHODANDRETURNRESPONSE_SERVICE_ID).handler(message -> {
+            try {
+                // Workaround for #allParams section clearing the vendorExtensions map
+                String serviceId = "Device_WaitForMethodAndReturnResponse";
+                String connectionIdParam = message.body().getString("connectionId");
+                if(connectionIdParam == null) {
+                    manageError(message, new MainApiException(400, "connectionId is required"), serviceId);
+                    return;
+                }
+                String connectionId = connectionIdParam;
+                String methodNameParam = message.body().getString("methodName");
+                if(methodNameParam == null) {
+                    manageError(message, new MainApiException(400, "methodName is required"), serviceId);
+                    return;
+                }
+                String methodName = methodNameParam;
+                JsonObject requestAndResponseParam = message.body().getJsonObject("requestAndResponse");
+                if (requestAndResponseParam == null) {
+                    manageError(message, new MainApiException(400, "requestAndResponse is required"), serviceId);
+                    return;
+                }
+                MethodRequestAndResponse requestAndResponse = Json.mapper.readValue(requestAndResponseParam.encode(), MethodRequestAndResponse.class);
+                service.deviceWaitForMethodAndReturnResponse(connectionId, methodName, requestAndResponse, result -> {
+                    if (result.succeeded())
+                        message.reply(null);
+                    else {
+                        Throwable cause = result.cause();
+                        manageError(message, cause, "Device_WaitForMethodAndReturnResponse");
+                    }
+                });
+            } catch (Exception e) {
+                logUnexpectedError("Device_WaitForMethodAndReturnResponse", e);
                 message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
             }
         });

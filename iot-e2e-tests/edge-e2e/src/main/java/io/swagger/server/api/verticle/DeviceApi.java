@@ -4,7 +4,7 @@ import io.swagger.server.api.model.Certificate;
 import io.swagger.server.api.model.ConnectResponse;
 import io.swagger.server.api.model.EventBody;
 import io.swagger.server.api.MainApiException;
-import io.swagger.server.api.model.RoundtripMethodCallBody;
+import io.swagger.server.api.model.MethodRequestAndResponse;
 import io.swagger.server.api.model.Twin;
 
 import io.vertx.core.AsyncResult;
@@ -56,9 +56,6 @@ public interface DeviceApi  {
     //Device_Reconnect
     void deviceReconnect(String connectionId, Boolean forceRenewPassword, Handler<AsyncResult<Void>> handler);
 
-    //Device_RoundtripMethodCall
-    void deviceRoundtripMethodCall(String connectionId, String methodName, RoundtripMethodCallBody requestAndResponse, Handler<AsyncResult<Void>> handler);
-
     //Device_SendEvent
     void deviceSendEvent(String connectionId, EventBody eventBody, Handler<AsyncResult<Void>> handler);
 
@@ -70,5 +67,8 @@ public interface DeviceApi  {
 
     //Device_WaitForDesiredPropertiesPatch
     void deviceWaitForDesiredPropertiesPatch(String connectionId, Handler<AsyncResult<Twin>> handler);
+
+    //Device_WaitForMethodAndReturnResponse
+    void deviceWaitForMethodAndReturnResponse(String connectionId, String methodName, MethodRequestAndResponse requestAndResponse, Handler<AsyncResult<Void>> handler);
 
 }

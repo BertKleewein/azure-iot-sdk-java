@@ -5,7 +5,7 @@ import io.swagger.server.api.model.ConnectResponse;
 import io.swagger.server.api.model.EventBody;
 import io.swagger.server.api.MainApiException;
 import io.swagger.server.api.model.MethodInvoke;
-import io.swagger.server.api.model.RoundtripMethodCallBody;
+import io.swagger.server.api.model.MethodRequestAndResponse;
 import io.swagger.server.api.model.Twin;
 
 import io.vertx.core.AsyncResult;
@@ -69,9 +69,6 @@ public interface ModuleApi  {
     //Module_Reconnect
     void moduleReconnect(String connectionId, Boolean forceRenewPassword, Handler<AsyncResult<Void>> handler);
 
-    //Module_RoundtripMethodCall
-    void moduleRoundtripMethodCall(String connectionId, String methodName, RoundtripMethodCallBody requestAndResponse, Handler<AsyncResult<Void>> handler);
-
     //Module_SendEvent
     void moduleSendEvent(String connectionId, EventBody eventBody, Handler<AsyncResult<Void>> handler);
 
@@ -86,5 +83,8 @@ public interface ModuleApi  {
 
     //Module_WaitForInputMessage
     void moduleWaitForInputMessage(String connectionId, String inputName, Handler<AsyncResult<EventBody>> handler);
+
+    //Module_WaitForMethodAndReturnResponse
+    void moduleWaitForMethodAndReturnResponse(String connectionId, String methodName, MethodRequestAndResponse requestAndResponse, Handler<AsyncResult<Void>> handler);
 
 }

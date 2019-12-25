@@ -13,7 +13,7 @@ import io.swagger.server.api.model.ConnectResponse;
 import io.swagger.server.api.model.EventBody;
 import io.swagger.server.api.MainApiException;
 import io.swagger.server.api.model.MethodInvoke;
-import io.swagger.server.api.model.RoundtripMethodCallBody;
+import io.swagger.server.api.model.MethodRequestAndResponse;
 import io.swagger.server.api.model.Twin;
 
 import java.util.List;
@@ -40,12 +40,12 @@ public class ModuleApiVerticle extends AbstractVerticle {
     final static String MODULE_INVOKEMODULEMETHOD_SERVICE_ID = "Module_InvokeModuleMethod";
     final static String MODULE_PATCHTWIN_SERVICE_ID = "Module_PatchTwin";
     final static String MODULE_RECONNECT_SERVICE_ID = "Module_Reconnect";
-    final static String MODULE_ROUNDTRIPMETHODCALL_SERVICE_ID = "Module_RoundtripMethodCall";
     final static String MODULE_SENDEVENT_SERVICE_ID = "Module_SendEvent";
     final static String MODULE_SENDOUTPUTEVENT_SERVICE_ID = "Module_SendOutputEvent";
     final static String MODULE_WAITFORCONNECTIONSTATUSCHANGE_SERVICE_ID = "Module_WaitForConnectionStatusChange";
     final static String MODULE_WAITFORDESIREDPROPERTIESPATCH_SERVICE_ID = "Module_WaitForDesiredPropertiesPatch";
     final static String MODULE_WAITFORINPUTMESSAGE_SERVICE_ID = "Module_WaitForInputMessage";
+    final static String MODULE_WAITFORMETHODANDRETURNRESPONSE_SERVICE_ID = "Module_WaitForMethodAndReturnResponse";
 
     final ModuleApi service;
 
@@ -580,43 +580,6 @@ public class ModuleApiVerticle extends AbstractVerticle {
             }
         });
 
-        //Consumer for Module_RoundtripMethodCall
-        vertx.eventBus().<JsonObject> consumer(MODULE_ROUNDTRIPMETHODCALL_SERVICE_ID).handler(message -> {
-            try {
-                // Workaround for #allParams section clearing the vendorExtensions map
-                String serviceId = "Module_RoundtripMethodCall";
-                String connectionIdParam = message.body().getString("connectionId");
-                if(connectionIdParam == null) {
-                    manageError(message, new MainApiException(400, "connectionId is required"), serviceId);
-                    return;
-                }
-                String connectionId = connectionIdParam;
-                String methodNameParam = message.body().getString("methodName");
-                if(methodNameParam == null) {
-                    manageError(message, new MainApiException(400, "methodName is required"), serviceId);
-                    return;
-                }
-                String methodName = methodNameParam;
-                JsonObject requestAndResponseParam = message.body().getJsonObject("requestAndResponse");
-                if (requestAndResponseParam == null) {
-                    manageError(message, new MainApiException(400, "requestAndResponse is required"), serviceId);
-                    return;
-                }
-                RoundtripMethodCallBody requestAndResponse = Json.mapper.readValue(requestAndResponseParam.encode(), RoundtripMethodCallBody.class);
-                service.moduleRoundtripMethodCall(connectionId, methodName, requestAndResponse, result -> {
-                    if (result.succeeded())
-                        message.reply(null);
-                    else {
-                        Throwable cause = result.cause();
-                        manageError(message, cause, "Module_RoundtripMethodCall");
-                    }
-                });
-            } catch (Exception e) {
-                logUnexpectedError("Module_RoundtripMethodCall", e);
-                message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
-            }
-        });
-
         //Consumer for Module_SendEvent
         vertx.eventBus().<JsonObject> consumer(MODULE_SENDEVENT_SERVICE_ID).handler(message -> {
             try {
@@ -762,6 +725,43 @@ public class ModuleApiVerticle extends AbstractVerticle {
                 });
             } catch (Exception e) {
                 logUnexpectedError("Module_WaitForInputMessage", e);
+                message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
+            }
+        });
+
+        //Consumer for Module_WaitForMethodAndReturnResponse
+        vertx.eventBus().<JsonObject> consumer(MODULE_WAITFORMETHODANDRETURNRESPONSE_SERVICE_ID).handler(message -> {
+            try {
+                // Workaround for #allParams section clearing the vendorExtensions map
+                String serviceId = "Module_WaitForMethodAndReturnResponse";
+                String connectionIdParam = message.body().getString("connectionId");
+                if(connectionIdParam == null) {
+                    manageError(message, new MainApiException(400, "connectionId is required"), serviceId);
+                    return;
+                }
+                String connectionId = connectionIdParam;
+                String methodNameParam = message.body().getString("methodName");
+                if(methodNameParam == null) {
+                    manageError(message, new MainApiException(400, "methodName is required"), serviceId);
+                    return;
+                }
+                String methodName = methodNameParam;
+                JsonObject requestAndResponseParam = message.body().getJsonObject("requestAndResponse");
+                if (requestAndResponseParam == null) {
+                    manageError(message, new MainApiException(400, "requestAndResponse is required"), serviceId);
+                    return;
+                }
+                MethodRequestAndResponse requestAndResponse = Json.mapper.readValue(requestAndResponseParam.encode(), MethodRequestAndResponse.class);
+                service.moduleWaitForMethodAndReturnResponse(connectionId, methodName, requestAndResponse, result -> {
+                    if (result.succeeded())
+                        message.reply(null);
+                    else {
+                        Throwable cause = result.cause();
+                        manageError(message, cause, "Module_WaitForMethodAndReturnResponse");
+                    }
+                });
+            } catch (Exception e) {
+                logUnexpectedError("Module_WaitForMethodAndReturnResponse", e);
                 message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
             }
         });

@@ -8,17 +8,17 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * parameters and response for a sync method call
  **/
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class RoundtripMethodCallBody   {
+public class MethodRequestAndResponse   {
 
   private Object requestPayload = null;
   private Object responsePayload = null;
   private Integer statusCode = null;
 
-  public RoundtripMethodCallBody () {
+  public MethodRequestAndResponse () {
 
   }
 
-  public RoundtripMethodCallBody (Object requestPayload, Object responsePayload, Integer statusCode) {
+  public MethodRequestAndResponse (Object requestPayload, Object responsePayload, Integer statusCode) {
     this.requestPayload = requestPayload;
     this.responsePayload = responsePayload;
     this.statusCode = statusCode;
@@ -60,10 +60,10 @@ public class RoundtripMethodCallBody   {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    RoundtripMethodCallBody roundtripMethodCallBody = (RoundtripMethodCallBody) o;
-    return Objects.equals(requestPayload, roundtripMethodCallBody.requestPayload) &&
-        Objects.equals(responsePayload, roundtripMethodCallBody.responsePayload) &&
-        Objects.equals(statusCode, roundtripMethodCallBody.statusCode);
+    MethodRequestAndResponse methodRequestAndResponse = (MethodRequestAndResponse) o;
+    return Objects.equals(requestPayload, methodRequestAndResponse.requestPayload) &&
+        Objects.equals(responsePayload, methodRequestAndResponse.responsePayload) &&
+        Objects.equals(statusCode, methodRequestAndResponse.statusCode);
   }
 
   @Override
@@ -74,7 +74,7 @@ public class RoundtripMethodCallBody   {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class RoundtripMethodCallBody {\n");
+    sb.append("class MethodRequestAndResponse {\n");
 
     sb.append("    requestPayload: ").append(toIndentedString(requestPayload)).append("\n");
     sb.append("    responsePayload: ").append(toIndentedString(responsePayload)).append("\n");

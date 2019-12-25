@@ -14,23 +14,23 @@ import io.swagger.server.api.MainApiException;
 import java.util.List;
 import java.util.Map;
 
-public class WrapperApiVerticle extends AbstractVerticle {
-    final static Logger LOGGER = LoggerFactory.getLogger(WrapperApiVerticle.class);
+public class ControlApiVerticle extends AbstractVerticle {
+    final static Logger LOGGER = LoggerFactory.getLogger(ControlApiVerticle.class);
 
-    final static String WRAPPER_CLEANUP_SERVICE_ID = "Wrapper_Cleanup";
-    final static String WRAPPER_GETCAPABILITIES_SERVICE_ID = "Wrapper_GetCapabilities";
-    final static String WRAPPER_LOGMESSAGE_SERVICE_ID = "Wrapper_LogMessage";
-    final static String WRAPPER_SENDCOMMAND_SERVICE_ID = "Wrapper_SendCommand";
-    final static String WRAPPER_SETFLAGS_SERVICE_ID = "Wrapper_SetFlags";
+    final static String CONTROL_CLEANUP_SERVICE_ID = "Control_Cleanup";
+    final static String CONTROL_GETCAPABILITIES_SERVICE_ID = "Control_GetCapabilities";
+    final static String CONTROL_LOGMESSAGE_SERVICE_ID = "Control_LogMessage";
+    final static String CONTROL_SENDCOMMAND_SERVICE_ID = "Control_SendCommand";
+    final static String CONTROL_SETFLAGS_SERVICE_ID = "Control_SetFlags";
 
-    final WrapperApi service;
+    final ControlApi service;
 
-    public WrapperApiVerticle() {
+    public ControlApiVerticle() {
         try {
-            Class serviceImplClass = getClass().getClassLoader().loadClass("io.swagger.server.api.verticle.WrapperApiImpl");
-            service = (WrapperApi)serviceImplClass.newInstance();
+            Class serviceImplClass = getClass().getClassLoader().loadClass("io.swagger.server.api.verticle.ControlApiImpl");
+            service = (ControlApi)serviceImplClass.newInstance();
         } catch (Exception e) {
-            logUnexpectedError("WrapperApiVerticle constructor", e);
+            logUnexpectedError("ControlApiVerticle constructor", e);
             throw new RuntimeException(e);
         }
     }
@@ -38,115 +38,115 @@ public class WrapperApiVerticle extends AbstractVerticle {
     @Override
     public void start() throws Exception {
 
-        //Consumer for Wrapper_Cleanup
-        vertx.eventBus().<JsonObject> consumer(WRAPPER_CLEANUP_SERVICE_ID).handler(message -> {
+        //Consumer for Control_Cleanup
+        vertx.eventBus().<JsonObject> consumer(CONTROL_CLEANUP_SERVICE_ID).handler(message -> {
             try {
                 // Workaround for #allParams section clearing the vendorExtensions map
-                String serviceId = "Wrapper_Cleanup";
-                service.wrapperCleanup(result -> {
+                String serviceId = "Control_Cleanup";
+                service.controlCleanup(result -> {
                     if (result.succeeded())
                         message.reply(null);
                     else {
                         Throwable cause = result.cause();
-                        manageError(message, cause, "Wrapper_Cleanup");
+                        manageError(message, cause, "Control_Cleanup");
                     }
                 });
             } catch (Exception e) {
-                logUnexpectedError("Wrapper_Cleanup", e);
+                logUnexpectedError("Control_Cleanup", e);
                 message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
             }
         });
 
-        //Consumer for Wrapper_GetCapabilities
-        vertx.eventBus().<JsonObject> consumer(WRAPPER_GETCAPABILITIES_SERVICE_ID).handler(message -> {
+        //Consumer for Control_GetCapabilities
+        vertx.eventBus().<JsonObject> consumer(CONTROL_GETCAPABILITIES_SERVICE_ID).handler(message -> {
             try {
                 // Workaround for #allParams section clearing the vendorExtensions map
-                String serviceId = "Wrapper_GetCapabilities";
-                service.wrapperGetCapabilities(result -> {
+                String serviceId = "Control_GetCapabilities";
+                service.controlGetCapabilities(result -> {
                     if (result.succeeded())
                         message.reply(new JsonObject(Json.encode(result.result())).encodePrettily());
                     else {
                         Throwable cause = result.cause();
-                        manageError(message, cause, "Wrapper_GetCapabilities");
+                        manageError(message, cause, "Control_GetCapabilities");
                     }
                 });
             } catch (Exception e) {
-                logUnexpectedError("Wrapper_GetCapabilities", e);
+                logUnexpectedError("Control_GetCapabilities", e);
                 message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
             }
         });
 
-        //Consumer for Wrapper_LogMessage
-        vertx.eventBus().<JsonObject> consumer(WRAPPER_LOGMESSAGE_SERVICE_ID).handler(message -> {
+        //Consumer for Control_LogMessage
+        vertx.eventBus().<JsonObject> consumer(CONTROL_LOGMESSAGE_SERVICE_ID).handler(message -> {
             try {
                 // Workaround for #allParams section clearing the vendorExtensions map
-                String serviceId = "Wrapper_LogMessage";
+                String serviceId = "Control_LogMessage";
                 JsonObject logMessageParam = message.body().getJsonObject("logMessage");
                 if (logMessageParam == null) {
                     manageError(message, new MainApiException(400, "logMessage is required"), serviceId);
                     return;
                 }
                 LogMessage logMessage = Json.mapper.readValue(logMessageParam.encode(), LogMessage.class);
-                service.wrapperLogMessage(logMessage, result -> {
+                service.controlLogMessage(logMessage, result -> {
                     if (result.succeeded())
                         message.reply(null);
                     else {
                         Throwable cause = result.cause();
-                        manageError(message, cause, "Wrapper_LogMessage");
+                        manageError(message, cause, "Control_LogMessage");
                     }
                 });
             } catch (Exception e) {
-                logUnexpectedError("Wrapper_LogMessage", e);
+                logUnexpectedError("Control_LogMessage", e);
                 message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
             }
         });
 
-        //Consumer for Wrapper_SendCommand
-        vertx.eventBus().<JsonObject> consumer(WRAPPER_SENDCOMMAND_SERVICE_ID).handler(message -> {
+        //Consumer for Control_SendCommand
+        vertx.eventBus().<JsonObject> consumer(CONTROL_SENDCOMMAND_SERVICE_ID).handler(message -> {
             try {
                 // Workaround for #allParams section clearing the vendorExtensions map
-                String serviceId = "Wrapper_SendCommand";
+                String serviceId = "Control_SendCommand";
                 String cmdParam = message.body().getString("cmd");
                 if(cmdParam == null) {
                     manageError(message, new MainApiException(400, "cmd is required"), serviceId);
                     return;
                 }
                 String cmd = cmdParam;
-                service.wrapperSendCommand(cmd, result -> {
+                service.controlSendCommand(cmd, result -> {
                     if (result.succeeded())
                         message.reply(null);
                     else {
                         Throwable cause = result.cause();
-                        manageError(message, cause, "Wrapper_SendCommand");
+                        manageError(message, cause, "Control_SendCommand");
                     }
                 });
             } catch (Exception e) {
-                logUnexpectedError("Wrapper_SendCommand", e);
+                logUnexpectedError("Control_SendCommand", e);
                 message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
             }
         });
 
-        //Consumer for Wrapper_SetFlags
-        vertx.eventBus().<JsonObject> consumer(WRAPPER_SETFLAGS_SERVICE_ID).handler(message -> {
+        //Consumer for Control_SetFlags
+        vertx.eventBus().<JsonObject> consumer(CONTROL_SETFLAGS_SERVICE_ID).handler(message -> {
             try {
                 // Workaround for #allParams section clearing the vendorExtensions map
-                String serviceId = "Wrapper_SetFlags";
+                String serviceId = "Control_SetFlags";
                 String flagsParam = message.body().getString("flags");
                 if(flagsParam == null) {
                     manageError(message, new MainApiException(400, "flags is required"), serviceId);
                     return;
                 }
                 Object flags = Json.mapper.readValue(flagsParam, Object.class);
-                service.wrapperSetFlags(flags, result -> {
+                service.controlSetFlags(flags, result -> {
                     if (result.succeeded())
                         message.reply(null);
                     else {
                         Throwable cause = result.cause();
-                        manageError(message, cause, "Wrapper_SetFlags");
+                        manageError(message, cause, "Control_SetFlags");
                     }
                 });
             } catch (Exception e) {
-                logUnexpectedError("Wrapper_SetFlags", e);
+                logUnexpectedError("Control_SetFlags", e);
                 message.fail(MainApiException.INTERNAL_SERVER_ERROR.getStatusCode(), MainApiException.INTERNAL_SERVER_ERROR.getStatusMessage());
             }
         });

@@ -18,11 +18,6 @@ import io.vertx.core.logging.LoggerFactory;
 import io.vertx.core.Vertx;
 import io.vertx.ext.web.Router;
 
-// Added 3 lines in merge
-import java.util.function.Function;
-import io.vertx.core.eventbus.DeliveryOptions;
-import io.vertx.ext.web.RoutingContext;
-
 public class MainApiVerticle extends AbstractVerticle {
     final static Logger LOGGER = LoggerFactory.getLogger(MainApiVerticle.class);
 
@@ -50,13 +45,8 @@ public class MainApiVerticle extends AbstractVerticle {
         vertxFileSystem.readFile("swagger.json", readFile -> {
             if (readFile.succeeded()) {
                 Swagger swagger = new SwaggerParser().parse(readFile.result().toString(Charset.forName("utf-8")));
-                // Changed constructor in merge to add setSendTimeout()
-                Router swaggerRouter = SwaggerRouter.swaggerRouter(router, swagger, vertx.eventBus(), new OperationIdServiceIdResolver(), new Function<RoutingContext, DeliveryOptions>() {
-                    @Override
-                    public DeliveryOptions apply(RoutingContext t) {
-                        return new DeliveryOptions().setSendTimeout(90000);
-                    }
-                });
+                Router swaggerRouter = SwaggerRouter.swaggerRouter(router, swagger, vertx.eventBus(), new OperationIdServiceIdResolver());
+
                 deployVerticles(startFuture);
 
                 vertx.createHttpServer()
@@ -75,6 +65,15 @@ public class MainApiVerticle extends AbstractVerticle {
     }
 
     public void deployVerticles(Future<Void> startFuture) {
+
+        vertx.deployVerticle("io.swagger.server.api.verticle.ControlApiVerticle", res -> {
+            if (res.succeeded()) {
+                LOGGER.info("ControlApiVerticle : Deployed");
+            } else {
+                startFuture.fail(res.cause());
+                LOGGER.error("ControlApiVerticle : Deployment failed");
+            }
+        });
 
         vertx.deployVerticle("io.swagger.server.api.verticle.DeviceApiVerticle", res -> {
             if (res.succeeded()) {
@@ -118,15 +117,6 @@ public class MainApiVerticle extends AbstractVerticle {
             } else {
                 startFuture.fail(res.cause());
                 LOGGER.error("ServiceApiVerticle : Deployment failed");
-            }
-        });
-
-        vertx.deployVerticle("io.swagger.server.api.verticle.WrapperApiVerticle", res -> {
-            if (res.succeeded()) {
-                LOGGER.info("WrapperApiVerticle : Deployed");
-            } else {
-                startFuture.fail(res.cause());
-                LOGGER.error("WrapperApiVerticle : Deployment failed");
             }
         });
 
