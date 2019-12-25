@@ -147,13 +147,6 @@ public class ModuleApiImpl implements ModuleApi
         throw new java.lang.UnsupportedOperationException("Not supported yet");
     }
 
-    //Module_RoundtripMethodCall
-    @Override
-    public void moduleRoundtripMethodCall(String connectionId, String methodName, RoundtripMethodCallBody requestAndResponse, Handler<AsyncResult<Void>> handler)
-    {
-        this._moduleGlue.roundtripMethodCall(connectionId, methodName, requestAndResponse, handler);
-    }
-
     //Module_SendEvent
     @Override
     public void moduleSendEvent(String connectionId, EventBody eventBody, Handler<AsyncResult<Void>> handler)
@@ -188,5 +181,13 @@ public class ModuleApiImpl implements ModuleApi
     {
         this._moduleGlue.waitForInputMessage(connectionId, inputName, handler);
     }
+
+    //Module_WaitForMethodAndReturnResponse
+    @Override
+    public void moduleWaitForMethodAndReturnResponse(String connectionId, String methodName, MethodRequestAndResponse requestAndResponse, Handler<AsyncResult<Void>> handler)
+    {
+        this._moduleGlue.WaitForMethodAndReturnResponse(connectionId, methodName, requestAndResponse, handler);
+    }
+
 
 }

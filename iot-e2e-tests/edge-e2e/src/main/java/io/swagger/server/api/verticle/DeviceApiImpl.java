@@ -112,9 +112,9 @@ public class DeviceApiImpl implements DeviceApi
         throw new java.lang.UnsupportedOperationException("Not supported yet");
     }
 
-    //Device_RoundtripMethodCall
+    //Device_WaitForMethodAndReturnResponse
     @Override
-    public void deviceRoundtripMethodCall(String connectionId, String methodName, RoundtripMethodCallBody requestAndResponse, Handler<AsyncResult<Void>> handler)
+    public void deviceWaitForMethodAndReturnResponse(String connectionId, String methodName, MethodRequestAndResponse requestAndResponse, Handler<AsyncResult<Void>> handler)
     {
         throw new java.lang.UnsupportedOperationException("Not supported yet");
     }

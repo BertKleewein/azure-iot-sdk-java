@@ -512,7 +512,7 @@ public class ModuleGlue
         }
     }
 
-    public void roundtripMethodCall(String connectionId, String methodName, RoundtripMethodCallBody requestAndResponse, Handler<AsyncResult<Void>> handler)
+    public void WaitForMethodAndReturnResponse(String connectionId, String methodName, MethodRequestAndResponse requestAndResponse, Handler<AsyncResult<Void>> handler)
     {
         ModuleClient client = getClient(connectionId);
         if (client == null)
@@ -640,6 +640,7 @@ public class ModuleGlue
         ModuleClient client = getClient(connectionId);
         if (client == null)
         {
+
             handler.handle(Future.failedFuture(new MainApiException(500, "invalid connection id")));
         }
         else
